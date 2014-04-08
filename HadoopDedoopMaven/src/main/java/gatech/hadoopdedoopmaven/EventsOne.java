@@ -11,4 +11,9 @@ public class EventsOne extends From {
     String location;
     String address;
     String description;
+
+    @Override
+    protected String getKey() {
+        return name + date + time;
+    }
 }
