@@ -1,3 +1,5 @@
+package gatech.hadoopdedoopmaven;
+
 /**
  *
  * @author eric
