@@ -1,10 +1,12 @@
 package gatech.hadoopdedoopmaven;
 
+import org.apache.hadoop.io.MapWritable;
+
 /**
  *
  * @author eric
  */
-public class ImportEvent extends Importer<EventsOne,GlobalEvent> {
+public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
 
     @Override
     protected void map(EventsOne from, GlobalEvent to) {
@@ -22,6 +24,11 @@ public class ImportEvent extends Importer<EventsOne,GlobalEvent> {
     @Override
     protected Class<GlobalEvent> getTo() {
         return GlobalEvent.class;
+    }
+
+    @Override
+    protected void mapToFrom(MapWritable value, EventsOne from) {
+        
     }
     
 }

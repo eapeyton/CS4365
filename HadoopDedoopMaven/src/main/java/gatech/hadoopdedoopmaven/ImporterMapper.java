@@ -11,8 +11,8 @@ import org.apache.hadoop.mapreduce.Mapper;
  *
  * @author eric
  */
-public class ImporterMapper extends Mapper<LongWritable, Text, Text, From> {
-    private Importer importer;
+public class ImporterMapper extends Mapper<LongWritable, Writable, Text, From> {
+    private Importer<From,To> importer;
     
     @Override
     protected void setup(Context context) {
@@ -20,8 +20,8 @@ public class ImporterMapper extends Mapper<LongWritable, Text, Text, From> {
     }
     
     @Override
-    protected void map(LongWritable key, Text value, Mapper<LongWritable, Text, Text, From>.Context context) throws IOException, InterruptedException {
-        From from = importer.getFromText(value);
+    protected void map(LongWritable key, Writable value, Mapper<LongWritable, Writable, Text, From>.Context context) throws IOException, InterruptedException {
+        From from = importer.getFromWritable(value);
         context.write(new Text(from.getKey()), from);
     }
 }
