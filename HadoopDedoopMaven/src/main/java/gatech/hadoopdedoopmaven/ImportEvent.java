@@ -1,7 +1,9 @@
 package gatech.hadoopdedoopmaven;
 
+import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.log4j.Logger;
 
@@ -42,7 +44,9 @@ public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
         from.location = "location";
         from.name = "name";
         from.time = "time";
-        Logger.getLogger(this.getClass()).info(value.entrySet().toString());
+        for (Entry<Writable,Writable> entry: value.entrySet()) {
+            Logger.getLogger("Mapper").info("Key:" + entry.getKey().toString() + " - Value:" + entry.getValue());
+        }
     }
     
 }
