@@ -44,6 +44,8 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
         Job job = Job.getInstance(super.getConf());
         job.setJobName(this.getClass().getSimpleName() + "Importer");
         
+        job.getConfiguration().setClass("Importer", this.getClass(), this.getClass());
+        
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(From.class);
