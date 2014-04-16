@@ -53,7 +53,8 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
         job.setOutputKeyClass(NullWritable.class);
         job.setOutputValueClass(NullWritable.class);
         
-        job.setJarByClass(Importer.class);
+        job.setJarByClass(this.getClass());
+        job.setNumReduceTasks(1);
         return job;
     }
     
