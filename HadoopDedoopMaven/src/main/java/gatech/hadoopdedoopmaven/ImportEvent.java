@@ -1,12 +1,20 @@
 package gatech.hadoopdedoopmaven;
 
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.MapWritable;
+import org.apache.hadoop.util.ToolRunner;
+import org.apache.log4j.Logger;
 
 /**
  *
  * @author eric
  */
 public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
+    
+    public static void main(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        int res = ToolRunner.run(conf, new ImportEvent(), args);
+    }
 
     @Override
     protected void map(EventsOne from, GlobalEvent to) {
@@ -28,7 +36,13 @@ public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
 
     @Override
     protected void mapToFrom(MapWritable value, EventsOne from) {
-        
+        from.address = "address";
+        from.date = "date";
+        from.description = "description";
+        from.location = "location";
+        from.name = "name";
+        from.time = "time";
+        Logger.getLogger(this.getClass()).info(value.entrySet().toString());
     }
     
 }

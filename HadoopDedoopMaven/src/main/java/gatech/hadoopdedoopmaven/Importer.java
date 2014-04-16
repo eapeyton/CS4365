@@ -10,6 +10,7 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
@@ -29,9 +30,10 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     protected abstract Class<T> getTo(); 
     
     @Override
-    public int run(String[] strings) throws Exception {
+    public int run(String[] args) throws Exception {
         Job job = createJob();
-        
+        FileInputFormat.setInputPaths(job, args[0]);
+
         if(job.waitForCompletion(true)) {
             return 0;
         }
@@ -39,12 +41,12 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     }
     
     protected Job createJob() throws IOException {
-        Job job = Job.getInstance();
-        job.setJobName(this.getClass().getCanonicalName() + "Importer");
+        Job job = Job.getInstance(super.getConf());
+        job.setJobName(this.getClass().getSimpleName() + "Importer");
         
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(Text.class);
+        job.setMapOutputValueClass(From.class);
         
         job.setReducerClass(ImporterReducer.class);
         job.setOutputFormatClass(NullOutputFormat.class);
