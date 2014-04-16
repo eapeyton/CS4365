@@ -27,10 +27,9 @@ public abstract class ImporterJson<F extends From,T extends To> extends Importer
         }
         for(Field field: fields) {
             try {
-                Logger.getAnonymousLogger().info("Field: " + field.toString());
-                Logger.getAnonymousLogger().info("Afield: " + field.toGenericString());
+                Logger.getAnonymousLogger().info("Field: " + field.getName());
                 field.setAccessible(true);
-                field.set(from, map.get(from.toString()));
+                field.set(from, map.get(field.getName()));
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(ImporterJson.class.getName()).log(Level.SEVERE, null, ex);
             }
