@@ -12,15 +12,15 @@ import org.apache.log4j.Logger;
  *
  * @author eric
  */
-public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
+public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
     
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        int res = ToolRunner.run(conf, new ImportEvent(), args);
+        int res = ToolRunner.run(conf, new ImportEventsA(), args);
     }
 
     @Override
-    protected void map(EventsOne from, GlobalEvent to) {
+    protected void map(SampleEventA from, GlobalEvent to) {
         to.title = from.name;
         to.datetime = from.date + from.time;
         to.location = from.location;
@@ -28,23 +28,13 @@ public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
     }
 
     @Override
-    protected Class<EventsOne> getFrom() {
-        return EventsOne.class;
+    protected Class<SampleEventA> getFrom() {
+        return SampleEventA.class;
     }
 
     @Override
     protected Class<GlobalEvent> getTo() {
         return GlobalEvent.class;
-    }
-
-    @Override
-    protected void mapToFrom(Map<String,String> value, EventsOne from) {
-        from.name = value.get("Name");
-        from.date = value.get("Date");
-        from.time = value.get("Time");
-        from.location = value.get("Location");
-        from.address = value.get("Address");
-        from.description = value.get("Description");
     }
     
 }

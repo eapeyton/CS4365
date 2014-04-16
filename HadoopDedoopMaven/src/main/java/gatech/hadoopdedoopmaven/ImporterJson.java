@@ -27,18 +27,13 @@ public abstract class ImporterJson<F extends From,T extends To> extends Importer
         }
         for(Field field: fields) {
             try {
-                Logger.getAnonymousLogger().info("Field: " + field.getName());
                 field.setAccessible(true);
                 field.set(from, map.get(field.getName()));
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(ImporterJson.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        Logger.getAnonymousLogger().info(from.toString());
-        //mapToFrom(map,from);
     }
-    
-    protected abstract void mapToFrom(Map<String,String> value, F from);
             
     @Override
     protected Job createJob() throws IOException {
