@@ -1,9 +1,12 @@
 package gatech.hadoopdedoopmaven;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
@@ -17,11 +20,21 @@ public abstract class ImporterJson<F extends From,T extends To> extends Importer
     @Override
     protected void writableToFrom(Writable writable, F from) {
         MapWritable mWritable = (MapWritable)writable;
+        Field[] fields = from.getClass().getDeclaredFields();
         HashMap<String,String> map = new HashMap<>();
         for(Entry<Writable,Writable> entry: mWritable.entrySet()) {
+            
             map.put(entry.getKey().toString(), entry.getValue().toString());
         }
-        mapToFrom(map,from);
+        for(Field field: fields) {
+            try {
+                field.set(from, map.get(from.toString()));
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                Logger.getLogger(ImporterJson.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        Logger.getAnonymousLogger().info(from.toString());
+        //mapToFrom(map,from);
     }
     
     protected abstract void mapToFrom(Map<String,String> value, F from);

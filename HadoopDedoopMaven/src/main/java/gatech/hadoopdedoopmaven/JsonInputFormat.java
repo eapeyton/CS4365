@@ -97,7 +97,7 @@ public class JsonInputFormat
         JSONObject jsonObj =
             (JSONObject) parser.parse(line.toString());
         for (Object key : jsonObj.keySet()) {
-          Text mapKey = new Text(key.toString());
+          Text mapKey = new Text(key.toString().toLowerCase());
           Text mapValue = new Text();
           if (jsonObj.get(key) != null) {
             mapValue.set(jsonObj.get(key).toString());

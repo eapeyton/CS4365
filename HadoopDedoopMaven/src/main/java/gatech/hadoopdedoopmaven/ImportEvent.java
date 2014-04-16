@@ -39,15 +39,12 @@ public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
 
     @Override
     protected void mapToFrom(Map<String,String> value, EventsOne from) {
-        from.address = "address";
-        from.date = "date";
-        from.description = "description";
-        from.location = "location";
-        from.name = "name";
-        from.time = "time";
-        for (Entry<String,String> entry: value.entrySet()) {
-            Logger.getLogger("Mapper").info("Key:" + entry.getKey().toString() + " - Value:" + entry.getValue());
-        }
+        from.name = value.get("Name");
+        from.date = value.get("Date");
+        from.time = value.get("Time");
+        from.location = value.get("Location");
+        from.address = value.get("Address");
+        from.description = value.get("Description");
     }
     
 }
