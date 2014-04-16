@@ -48,7 +48,7 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
         
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(From.class);
+        job.setMapOutputValueClass(getFrom());
         
         job.setReducerClass(ImporterReducer.class);
         job.setOutputFormatClass(NullOutputFormat.class);
