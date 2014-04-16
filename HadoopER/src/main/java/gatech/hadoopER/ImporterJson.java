@@ -1,5 +1,6 @@
-package gatech.hadoopdedoopmaven;
+package gatech.hadoopER;
 
+import gatech.hadoopER.io.JsonInputFormat;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.HashMap;

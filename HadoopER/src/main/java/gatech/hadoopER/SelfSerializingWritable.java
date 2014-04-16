@@ -2,7 +2,7 @@
  * CS 4365 Project
  */
 
-package gatech.hadoopdedoopmaven;
+package gatech.hadoopER;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

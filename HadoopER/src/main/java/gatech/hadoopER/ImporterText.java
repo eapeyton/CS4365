@@ -1,4 +1,4 @@
-package gatech.hadoopdedoopmaven;
+package gatech.hadoopER;
 
 import java.io.IOException;
 import org.apache.hadoop.io.Text;

@@ -1,4 +1,4 @@
-package gatech.hadoopdedoopmaven;
+package gatech.hadoopER;
 
 /**
  *

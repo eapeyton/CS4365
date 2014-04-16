@@ -1,4 +1,4 @@
-package gatech.hadoopdedoopmaven;
+package gatech.hadoopER;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
