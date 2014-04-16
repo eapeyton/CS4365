@@ -23,11 +23,13 @@ public abstract class ImporterJson<F extends From,T extends To> extends Importer
         Field[] fields = from.getClass().getDeclaredFields();
         HashMap<String,String> map = new HashMap<>();
         for(Entry<Writable,Writable> entry: mWritable.entrySet()) {
-            
             map.put(entry.getKey().toString(), entry.getValue().toString());
         }
         for(Field field: fields) {
             try {
+                Logger.getAnonymousLogger().info("Field: " + field.toString());
+                Logger.getAnonymousLogger().info("Afield: " + field.toGenericString());
+                field.setAccessible(true);
                 field.set(from, map.get(from.toString()));
             } catch (IllegalArgumentException | IllegalAccessException ex) {
                 Logger.getLogger(ImporterJson.class.getName()).log(Level.SEVERE, null, ex);
