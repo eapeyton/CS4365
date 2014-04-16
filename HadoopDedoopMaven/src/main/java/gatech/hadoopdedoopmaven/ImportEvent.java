@@ -1,5 +1,6 @@
 package gatech.hadoopdedoopmaven;
 
+import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.MapWritable;
@@ -37,14 +38,14 @@ public class ImportEvent extends ImporterJson<EventsOne,GlobalEvent> {
     }
 
     @Override
-    protected void mapToFrom(MapWritable value, EventsOne from) {
+    protected void mapToFrom(Map<String,String> value, EventsOne from) {
         from.address = "address";
         from.date = "date";
         from.description = "description";
         from.location = "location";
         from.name = "name";
         from.time = "time";
-        for (Entry<Writable,Writable> entry: value.entrySet()) {
+        for (Entry<String,String> entry: value.entrySet()) {
             Logger.getLogger("Mapper").info("Key:" + entry.getKey().toString() + " - Value:" + entry.getValue());
         }
     }

@@ -1,6 +1,9 @@
 package gatech.hadoopdedoopmaven;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.Job;
@@ -14,10 +17,14 @@ public abstract class ImporterJson<F extends From,T extends To> extends Importer
     @Override
     protected void writableToFrom(Writable writable, F from) {
         MapWritable mWritable = (MapWritable)writable;
-        mapToFrom(mWritable,from);
+        HashMap<String,String> map = new HashMap<>();
+        for(Entry<Writable,Writable> entry: mWritable.entrySet()) {
+            map.put(entry.getKey().toString(), entry.getValue().toString());
+        }
+        mapToFrom(map,from);
     }
     
-    protected abstract void mapToFrom(MapWritable value, F from);
+    protected abstract void mapToFrom(Map<String,String> value, F from);
             
     @Override
     protected Job createJob() throws IOException {
