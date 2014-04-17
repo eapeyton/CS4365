@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -30,6 +31,11 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     protected abstract Class<? extends InputFormat> getInputFormat();
     protected abstract Class<F> getFrom();
     protected abstract Class<T> getTo(); 
+    
+    public void go(String[] args) throws Exception {
+        Configuration conf = new Configuration();
+        int res = ToolRunner.run(conf, this, args);
+    }
     
     @Override
     public int run(String[] args) throws Exception {

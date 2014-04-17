@@ -1,13 +1,6 @@
 package gatech.hadoopER;
 
 import gatech.hadoopER.importer.ImporterJson;
-import java.util.Map;
-import java.util.Map.Entry;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.io.MapWritable;
-import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.util.ToolRunner;
-import org.apache.log4j.Logger;
 
 /**
  *
@@ -16,8 +9,7 @@ import org.apache.log4j.Logger;
 public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
     
     public static void main(String[] args) throws Exception {
-        Configuration conf = new Configuration();
-        int res = ToolRunner.run(conf, new ImportEventsA(), args);
+        new ImportEventsA().go(args);
     }
 
     @Override

@@ -11,6 +11,10 @@ import gatech.hadoopER.importer.ImporterXml;
  * @author eric
  */
 public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
+    
+    public static void main(String[] args) throws Exception {
+        new ImportEventsB().go(args);
+    }
 
     @Override
     protected void map(SampleEventB from, GlobalEvent to) {

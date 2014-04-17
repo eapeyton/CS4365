@@ -1,17 +1,11 @@
 package gatech.hadoopER.importer;
 
 import gatech.hadoopER.io.JsonInputFormat;
-import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.hadoop.io.MapWritable;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputFormat;
-import org.apache.hadoop.mapreduce.Job;
 
 /**
  *
