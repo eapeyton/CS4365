@@ -1,5 +1,6 @@
 package gatech.hadoopER;
 
+import gatech.hadoopER.importer.ImporterJson;
 import java.util.Map;
 import java.util.Map.Entry;
 import org.apache.hadoop.conf.Configuration;

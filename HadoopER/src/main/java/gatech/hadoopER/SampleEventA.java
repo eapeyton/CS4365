@@ -1,5 +1,7 @@
 package gatech.hadoopER;
 
+import gatech.hadoopER.importer.From;
+
 /**
  *
  * @author eric
@@ -18,7 +20,7 @@ public class SampleEventA extends From {
     String description;
 
     @Override
-    protected String getKey() {
+    public String getKey() {
         return name + date + time;
     }
    

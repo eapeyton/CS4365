@@ -1,4 +1,4 @@
-package gatech.hadoopER;
+package gatech.hadoopER.importer;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
@@ -26,6 +27,7 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     private final ArrayList<T> outputs = new ArrayList<>();
     protected abstract void map(F from, T to);
     protected abstract void writableToFrom(Writable writable, F from);
+    protected abstract Class<? extends InputFormat> getInputFormat();
     protected abstract Class<F> getFrom();
     protected abstract Class<T> getTo(); 
     
@@ -46,6 +48,7 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
         
         job.getConfiguration().setClass("Importer", this.getClass(), this.getClass());
         
+        job.setInputFormatClass(getInputFormat()); 
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(getFrom());

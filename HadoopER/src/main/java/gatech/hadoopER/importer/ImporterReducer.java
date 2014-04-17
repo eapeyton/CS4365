@@ -1,4 +1,4 @@
-package gatech.hadoopER;
+package gatech.hadoopER.importer;
 
 import java.util.ArrayList;
 import org.apache.hadoop.io.NullWritable;

@@ -1,4 +1,4 @@
-package gatech.hadoopER;
+package gatech.hadoopER.importer;
 
 import java.io.IOException;
 import org.apache.hadoop.io.Text;

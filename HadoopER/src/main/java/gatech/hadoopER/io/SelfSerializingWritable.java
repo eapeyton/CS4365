@@ -2,7 +2,7 @@
  * CS 4365 Project
  */
 
-package gatech.hadoopER;
+package gatech.hadoopER.io;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
