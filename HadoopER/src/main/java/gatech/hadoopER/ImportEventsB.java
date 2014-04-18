@@ -5,6 +5,9 @@
 package gatech.hadoopER;
 
 import gatech.hadoopER.importer.ImporterXml;
+import gatech.hadoopER.io.XMLInputFormat;
+import java.io.IOException;
+import org.apache.hadoop.mapreduce.Job;
 
 /**
  *
@@ -32,6 +35,14 @@ public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
     @Override
     protected Class<GlobalEvent> getTo() {
         return GlobalEvent.class;
+    }
+    
+    @Override
+    protected Job createJob() throws IOException {
+        Job job = super.createJob();
+        job.getConfiguration().set(XMLInputFormat.START_TAG_KEY, "<event>");
+        job.getConfiguration().set(XMLInputFormat.END_TAG_KEY, "</event>");
+        return job;
     }
     
 }
