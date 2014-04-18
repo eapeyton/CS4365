@@ -62,6 +62,7 @@ public class EventRunner extends Configured implements Tool {
                 }
             }
         }
+        FileOutputFormat.setOutputPath(builder, new Path("/user/epeyton.site/builder-output/"));
         
         if(!builder.waitForCompletion(true)) {
             return 1;
