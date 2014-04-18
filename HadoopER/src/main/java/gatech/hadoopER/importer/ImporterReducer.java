@@ -1,6 +1,9 @@
 package gatech.hadoopER.importer;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
@@ -10,7 +13,7 @@ import org.apache.log4j.Logger;
  *
  * @author eric
  */
-public class ImporterReducer extends Reducer<Text, From, NullWritable, NullWritable> {
+public class ImporterReducer extends Reducer<Text, From, Text, To> {
     private Importer<From,To> importer;
     
     @Override
@@ -19,14 +22,12 @@ public class ImporterReducer extends Reducer<Text, From, NullWritable, NullWrita
     }
     
     @Override
-    public void reduce(Text key, Iterable<From> values, Reducer<Text,From,NullWritable,NullWritable>.Context context) {
+    public void reduce(Text key, Iterable<From> values, Reducer<Text,From,Text,To>.Context context) throws IOException, InterruptedException {
         ArrayList<To> records = new ArrayList<>();
         for(From value: values) {
             To record = importer.getFromTo(value);
-            records.add(record);
-        }
-        for(To record: records) {
             Logger.getLogger(this.getClass()).info(record.toString());
+            context.write(new Text(record.uuid.toString()), record);
         }
     }
     

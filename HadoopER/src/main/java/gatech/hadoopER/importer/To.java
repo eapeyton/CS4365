@@ -1,5 +1,8 @@
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.io.SelfSerializingWritable;
+import java.util.UUID;
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -10,6 +13,6 @@ package gatech.hadoopER.importer;
  *
  * @author eric
  */
-public abstract class To {
-    
+public abstract class To extends SelfSerializingWritable {
+    public UUID uuid;
 }

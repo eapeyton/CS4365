@@ -2,10 +2,12 @@ package gatech.hadoopER.importer;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
@@ -13,7 +15,8 @@ import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
 
@@ -41,6 +44,7 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     public int run(String[] args) throws Exception {
         Job job = createJob();
         FileInputFormat.setInputPaths(job, args[0]);
+        FileOutputFormat.setOutputPath(job, new Path("/user/epeyton.site/importer-output/"));
 
         if(job.waitForCompletion(true)) {
             return 0;
@@ -60,9 +64,9 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
         job.setMapOutputValueClass(getFrom());
         
         job.setReducerClass(ImporterReducer.class);
-        job.setOutputFormatClass(NullOutputFormat.class);
-        job.setOutputKeyClass(NullWritable.class);
-        job.setOutputValueClass(NullWritable.class);
+        job.setOutputFormatClass(SequenceFileOutputFormat.class);
+        job.setOutputKeyClass(Text.class);
+        job.setOutputValueClass(getTo());
         
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(1);
@@ -84,6 +88,7 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     protected T getFromTo(F from) {
         try {
             T to = getTo().newInstance();
+            to.uuid = UUID.randomUUID();
             map(from, to);
             return to;
         } catch (InstantiationException | IllegalAccessException ex) {
