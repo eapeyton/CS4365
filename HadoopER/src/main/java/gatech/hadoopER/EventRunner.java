@@ -6,6 +6,7 @@ package gatech.hadoopER;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
+import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
@@ -31,6 +32,7 @@ public class EventRunner extends Configured implements Tool {
         Configuration conf = super.getConf();
         Job importA = new ImportEventsA().createJob(conf);
         Job importB = new ImportEventsB().createJob(conf);
+        Job builder = new BuildEvents().createJob(conf);
         
         
         FileInputFormat.setInputPaths(importA, new Path("/user/epeyton.site/a-source/compact-events.json"));
@@ -48,6 +50,20 @@ public class EventRunner extends Configured implements Tool {
             return 1;
         }
         if(!importB.waitForCompletion(true)) {
+            return 1;
+        }
+        
+        for(FileStatus item: fs.listStatus(output)) {
+            if(item.isDirectory()) {
+                for (FileStatus iitem: fs.listStatus(item.getPath())) {
+                    if(iitem.isFile()) {
+                        FileInputFormat.addInputPath(builder, iitem.getPath());
+                    }
+                }
+            }
+        }
+        
+        if(!builder.waitForCompletion(true)) {
             return 1;
         }
         return 0;
