@@ -18,7 +18,10 @@ public class BuilderMapper extends Mapper<Text,To,Text,To> {
 
     @Override
     protected void map(Text key, To value, Context context) throws IOException, InterruptedException {
-        Logger.getLogger(BuilderMapper.class).info(key.toString() + ":" + value.toString());
+        for(String blockKey: value.getBlockingKeys()) {
+            context.write(new Text(blockKey.toLowerCase()), value);
+        }
+        //Logger.getLogger(BuilderMapper.class).info(key.toString() + ":" + value.toString());
     }
     
     

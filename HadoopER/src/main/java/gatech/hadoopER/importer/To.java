@@ -1,6 +1,7 @@
 package gatech.hadoopER.importer;
 
 import gatech.hadoopER.io.SelfSerializingWritable;
+import java.util.Set;
 import java.util.UUID;
 
 /*
@@ -15,4 +16,6 @@ import java.util.UUID;
  */
 public abstract class To extends SelfSerializingWritable {
     public UUID uuid;
+    
+    public abstract Set<String> getBlockingKeys();
 }
