@@ -23,7 +23,12 @@ public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
     protected void map(SampleEventB from, GlobalEvent to) {
         to.title = from.name;
         to.other = from.description;
-        to.location = from.latitude + "," + from.longitude;
+        if(from.latitude != null & from.longitude != null) {
+            to.location = from.latitude + "," + from.longitude;
+        }
+        else {
+            to.location = from.location;
+        }
         to.datetime = from.start_time;
     }
 
