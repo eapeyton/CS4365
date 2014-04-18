@@ -32,6 +32,7 @@ public class EventRunner extends Configured implements Tool {
         Job importA = new ImportEventsA().createJob(conf);
         Job importB = new ImportEventsB().createJob(conf);
         
+        
         FileInputFormat.setInputPaths(importA, new Path("/user/epeyton.site/a-source/compact-events.json"));
         FileInputFormat.setInputPaths(importB, new Path("/user/epeyton.site/b-source/events2.xml"));
         

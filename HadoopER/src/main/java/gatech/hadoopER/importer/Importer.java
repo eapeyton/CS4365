@@ -1,5 +1,6 @@
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.ERJob;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -19,9 +20,8 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
  * @param <F>
  * @param <T>
  */
-public abstract class Importer<F extends From,T extends To> {
+public abstract class Importer<F extends From,T extends To> implements ERJob {
     
-    private final ArrayList<T> outputs = new ArrayList<>();
     protected abstract void map(F from, T to);
     protected abstract void writableToFrom(Writable writable, F from);
     protected abstract Class<? extends InputFormat> getInputFormat();
@@ -81,12 +81,5 @@ public abstract class Importer<F extends From,T extends To> {
             throw new RuntimeException(ex);
         }
     }
-        
-    protected void doImport(F[] inputs) throws InstantiationException, IllegalAccessException {
-        for(F input: inputs) {
-            T output = getTo().newInstance();
-            map(input,output);
-            outputs.add(output);
-        }
-    }
+     
 }
