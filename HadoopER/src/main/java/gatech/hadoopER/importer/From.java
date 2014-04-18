@@ -17,12 +17,15 @@ public abstract class From extends SelfSerializingWritable {
     public void readMap(Map<String,String> map) {
         Field[] fields = this.getClass().getDeclaredFields();
         for(Field field: fields) {
-            try {
-                field.setAccessible(true);
-                field.set(this, map.get(field.getName()));
-            } catch (IllegalArgumentException | IllegalAccessException ex) {
-                Logger.getLogger(ImporterJson.class.getName()).log(Level.SEVERE, null, ex);
+            if(map.containsKey(field.getName())) {
+                try {
+                    field.setAccessible(true);
+                    field.set(this, map.get(field.getName()));
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    Logger.getLogger(ImporterJson.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
+
         }
     }
 }
