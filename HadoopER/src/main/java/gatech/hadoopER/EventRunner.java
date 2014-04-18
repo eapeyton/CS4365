@@ -14,6 +14,7 @@ import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.util.Tool;
 import org.apache.hadoop.util.ToolRunner;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -55,8 +56,10 @@ public class EventRunner extends Configured implements Tool {
         
         for(FileStatus item: fs.listStatus(output)) {
             if(item.isDirectory()) {
+                Logger.getLogger(this.getClass()).info("Found Dir:" + item.getPath());
                 for (FileStatus iitem: fs.listStatus(item.getPath())) {
-                    if(iitem.isFile()) {
+                    if(!iitem.isDirectory()) {
+                        Logger.getLogger(this.getClass()).info("Found File:" + iitem.getPath());
                         FileInputFormat.addInputPath(builder, iitem.getPath());
                     }
                 }
