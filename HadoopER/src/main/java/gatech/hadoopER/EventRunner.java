@@ -58,7 +58,7 @@ public class EventRunner extends Configured implements Tool {
             if(item.isDirectory()) {
                 Logger.getLogger(this.getClass()).info("Found Dir:" + item.getPath());
                 for (FileStatus iitem: fs.listStatus(item.getPath())) {
-                    if(!iitem.isDirectory()) {
+                    if(iitem.isFile()&&!iitem.getPath().getName().startsWith("_")) {
                         Logger.getLogger(this.getClass()).info("Found File:" + iitem.getPath());
                         FileInputFormat.addInputPath(builder, iitem.getPath());
                     }
