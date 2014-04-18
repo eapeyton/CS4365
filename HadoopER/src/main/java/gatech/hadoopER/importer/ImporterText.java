@@ -1,9 +1,8 @@
 package gatech.hadoopER.importer;
 
-import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
-import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 
 /**
@@ -13,11 +12,10 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 public abstract class ImporterText<F extends From,T extends To> extends Importer<F,T> {
 
     @Override
-    protected Job createJob() throws IOException {
-        Job job = super.createJob();
-        job.setInputFormatClass(TextInputFormat.class);
-        return job;
+    protected Class<? extends InputFormat> getInputFormat() {
+        return TextInputFormat.class;
     }
+
     
     @Override
     protected void writableToFrom(Writable writable, F from) {

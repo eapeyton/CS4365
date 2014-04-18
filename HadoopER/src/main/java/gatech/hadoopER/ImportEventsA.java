@@ -7,10 +7,6 @@ import gatech.hadoopER.importer.ImporterJson;
  * @author eric
  */
 public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
-    
-    public static void main(String[] args) throws Exception {
-        new ImportEventsA().go(args);
-    }
 
     @Override
     protected void map(SampleEventA from, GlobalEvent to) {

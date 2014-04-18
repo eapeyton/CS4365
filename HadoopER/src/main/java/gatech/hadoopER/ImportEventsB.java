@@ -7,6 +7,7 @@ package gatech.hadoopER;
 import gatech.hadoopER.importer.ImporterXml;
 import gatech.hadoopER.io.XMLInputFormat;
 import java.io.IOException;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 
 /**
@@ -15,10 +16,6 @@ import org.apache.hadoop.mapreduce.Job;
  */
 public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
     
-    public static void main(String[] args) throws Exception {
-        new ImportEventsB().go(args);
-    }
-
     @Override
     protected void map(SampleEventB from, GlobalEvent to) {
         to.title = from.name;
@@ -43,8 +40,8 @@ public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
     }
     
     @Override
-    protected Job createJob() throws IOException {
-        Job job = super.createJob();
+    public Job createJob(Configuration conf) throws IOException {
+        Job job = super.createJob(conf);
         job.getConfiguration().set(XMLInputFormat.START_TAG_KEY, "<event>");
         job.getConfiguration().set(XMLInputFormat.END_TAG_KEY, "</event>");
         return job;

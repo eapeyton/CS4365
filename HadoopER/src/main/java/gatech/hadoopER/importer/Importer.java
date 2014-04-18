@@ -6,19 +6,12 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputFormat;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
-import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
-import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
-import org.apache.hadoop.util.Tool;
-import org.apache.hadoop.util.ToolRunner;
 
 /**
  *
@@ -26,7 +19,7 @@ import org.apache.hadoop.util.ToolRunner;
  * @param <F>
  * @param <T>
  */
-public abstract class Importer<F extends From,T extends To> extends Configured implements Tool {
+public abstract class Importer<F extends From,T extends To> {
     
     private final ArrayList<T> outputs = new ArrayList<>();
     protected abstract void map(F from, T to);
@@ -35,25 +28,8 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
     protected abstract Class<F> getFrom();
     protected abstract Class<T> getTo(); 
     
-    public void go(String[] args) throws Exception {
-        Configuration conf = new Configuration();
-        int res = ToolRunner.run(conf, this, args);
-    }
-    
-    @Override
-    public int run(String[] args) throws Exception {
-        Job job = createJob();
-        FileInputFormat.setInputPaths(job, args[0]);
-        FileOutputFormat.setOutputPath(job, new Path("/user/epeyton.site/importer-output/"));
-
-        if(job.waitForCompletion(true)) {
-            return 0;
-        }
-        return 1;
-    }
-    
-    protected Job createJob() throws IOException {
-        Job job = Job.getInstance(super.getConf());
+    public Job createJob(Configuration conf) throws IOException {
+        Job job = Job.getInstance(conf);
         job.setJobName(this.getClass().getSimpleName() + "Importer");
         
         job.getConfiguration().setClass("Importer", this.getClass(), this.getClass());
@@ -72,8 +48,6 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
         job.setNumReduceTasks(1);
         return job;
     }
-    
-    
     
     protected static Importer getInstance(JobContext context) {
         try {
@@ -106,10 +80,6 @@ public abstract class Importer<F extends From,T extends To> extends Configured i
             Logger.getLogger(Importer.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
         }
-    }
-    
-    protected void runImport(String[] args) throws Exception {
-        ToolRunner.run(this.getClass().newInstance(), args);
     }
         
     protected void doImport(F[] inputs) throws InstantiationException, IllegalAccessException {
