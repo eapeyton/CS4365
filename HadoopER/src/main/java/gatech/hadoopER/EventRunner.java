@@ -34,9 +34,9 @@ public class EventRunner extends Configured implements Tool {
     }
     
     private static final Path HOME = new Path("/user/epeyton.site/");
-    private static final Path IMPORTER_OUTPUT = HOME.suffix("importer-output/");
-    private static final Path BUILDER_OUTPUT = HOME.suffix("builder-output/");
-    private static final Path GROUPER_OUTPUT = HOME.suffix("grouper-output/");;
+    private static final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
+    private static final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
+    private static final Path GROUPER_OUTPUT = HOME.suffix("/grouper-output/");
 
     @Override
     public int run(String[] args) throws Exception {
@@ -46,15 +46,15 @@ public class EventRunner extends Configured implements Tool {
         Job builder = new BuildEvents().createJob(conf);
         
         
-        FileInputFormat.setInputPaths(importA, HOME.suffix("a-source/compact-events.json"));
-        FileInputFormat.setInputPaths(importB, HOME.suffix("b-source/events2.xml"));
+        FileInputFormat.setInputPaths(importA, HOME.suffix("/a-source/compact-events.json"));
+        FileInputFormat.setInputPaths(importB, HOME.suffix("/b-source/events2.xml"));
         
         FileSystem fs = FileSystem.get(conf);
         fs.delete(IMPORTER_OUTPUT, true);
         fs.mkdirs(IMPORTER_OUTPUT);
         
-        FileOutputFormat.setOutputPath(importA, IMPORTER_OUTPUT.suffix("source-a/"));
-        FileOutputFormat.setOutputPath(importB, IMPORTER_OUTPUT.suffix("source-b/")); ;
+        FileOutputFormat.setOutputPath(importA, IMPORTER_OUTPUT.suffix("/source-a/"));
+        FileOutputFormat.setOutputPath(importB, IMPORTER_OUTPUT.suffix("/source-b/")); 
         
         if(!importA.waitForCompletion(true)) {
             return 1;
