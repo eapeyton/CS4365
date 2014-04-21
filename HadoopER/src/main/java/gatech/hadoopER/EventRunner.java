@@ -4,6 +4,11 @@
 
 package gatech.hadoopER;
 
+import gatech.hadoopER.grouper.Grouper;
+import gatech.hadoopER.util.Util;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
@@ -27,6 +32,11 @@ public class EventRunner extends Configured implements Tool {
         int res;
         res = ToolRunner.run(conf, new EventRunner(), args);
     }
+    
+    private static final Path HOME = new Path("/user/epeyton.site/");
+    private static final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
+    private static final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
+    private static final Path GROUPER_OUTPUT = HOME.suffix("/grouper-output/");
 
     @Override
     public int run(String[] args) throws Exception {
@@ -36,16 +46,15 @@ public class EventRunner extends Configured implements Tool {
         Job builder = new BuildEvents().createJob(conf);
         
         
-        FileInputFormat.setInputPaths(importA, new Path("/user/epeyton.site/a-source/compact-events.json"));
-        FileInputFormat.setInputPaths(importB, new Path("/user/epeyton.site/b-source/events2.xml"));
+        FileInputFormat.setInputPaths(importA, HOME.suffix("/a-source/compact-events.json"));
+        FileInputFormat.setInputPaths(importB, HOME.suffix("/b-source/events2.xml"));
         
-        Path output = new Path("/user/epeyton.site/importer-output/");
         FileSystem fs = FileSystem.get(conf);
-        fs.delete(output, true);
-        fs.mkdirs(output);
+        fs.delete(IMPORTER_OUTPUT, true);
+        fs.mkdirs(IMPORTER_OUTPUT);
         
-        FileOutputFormat.setOutputPath(importA, output.suffix("/source-a/"));
-        FileOutputFormat.setOutputPath(importB, output.suffix("/source-b/")); 
+        FileOutputFormat.setOutputPath(importA, IMPORTER_OUTPUT.suffix("/source-a/"));
+        FileOutputFormat.setOutputPath(importB, IMPORTER_OUTPUT.suffix("/source-b/")); 
         
         if(!importA.waitForCompletion(true)) {
             return 1;
@@ -54,22 +63,23 @@ public class EventRunner extends Configured implements Tool {
             return 1;
         }
         
-        for(FileStatus item: fs.listStatus(output)) {
-            if(item.isDirectory()) {
-                Logger.getLogger(this.getClass()).info("Found Dir:" + item.getPath());
-                for (FileStatus iitem: fs.listStatus(item.getPath())) {
-                    if(iitem.isFile()&&!iitem.getPath().getName().startsWith("_")) {
-                        Logger.getLogger(this.getClass()).info("Found File:" + iitem.getPath());
-                        FileInputFormat.addInputPath(builder, iitem.getPath());
-                    }
-                }
-            }
+        for(Path item: Util.recurseDir(fs, IMPORTER_OUTPUT)) {
+            FileInputFormat.addInputPath(builder, item);
         }
-        FileOutputFormat.setOutputPath(builder, new Path("/user/epeyton.site/builder-output/"));
+        
+        fs.delete(BUILDER_OUTPUT, true);
+        
+        FileOutputFormat.setOutputPath(builder, BUILDER_OUTPUT);
         
         if(!builder.waitForCompletion(true)) {
             return 1;
         }
+        
+        fs.delete(GROUPER_OUTPUT, true);
+        Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
+        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT);
+        
+        
         return 0;
     }
 }
