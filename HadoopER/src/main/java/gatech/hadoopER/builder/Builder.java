@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 public abstract class Builder<T extends To> implements ERJob {
     
     protected abstract Class<T> getTo(); 
+    protected abstract boolean areMatching(T a, T b);
 
     @Override
     public Job createJob(Configuration conf) throws IOException {
@@ -38,7 +39,7 @@ public abstract class Builder<T extends To> implements ERJob {
         
         job.setReducerClass(BuilderReducer.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
-        job.setOutputKeyClass(Text.class);
+        job.setOutputKeyClass(getTo());
         job.setOutputValueClass(getTo());
         
         job.setJarByClass(this.getClass());

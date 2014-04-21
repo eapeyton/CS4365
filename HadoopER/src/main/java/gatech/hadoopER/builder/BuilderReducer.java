@@ -13,11 +13,30 @@ import org.apache.hadoop.mapreduce.Reducer;
  *
  * @author eric
  */
-public class BuilderReducer extends Reducer<Text,To,Text,To> {
+public class BuilderReducer extends Reducer<Text,To,To,To> {
+    
+    private Builder builder;
+
+    @Override
+    protected void setup(Context context) throws IOException, InterruptedException {
+        builder = Builder.getInstance(context);
+    }
 
     @Override
     protected void reduce(Text key, Iterable<To> values, Context context) throws IOException, InterruptedException {
-        super.reduce(key, values, context); //To change body of generated methods, choose Tools | Templates.
+        int i=0;
+        for(To value: values) {
+            int j=0;
+            for(To otherValue: values) {
+                if(j > i) {
+                    if(builder.areMatching(value, otherValue)) {
+                        context.write(value, otherValue);
+                    }
+                }
+                j++;
+            }
+            i++;
+        }
     }
     
 }

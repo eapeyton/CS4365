@@ -16,5 +16,10 @@ public class BuildEvents extends Builder<GlobalEvent> {
     protected Class<GlobalEvent> getTo() {
         return GlobalEvent.class;
     }
+
+    @Override
+    protected boolean areMatching(GlobalEvent a, GlobalEvent b) {
+        return false;
+    }
     
 }
