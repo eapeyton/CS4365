@@ -21,7 +21,7 @@ public class BuilderMapper extends Mapper<Text,To,Text,To> {
         for(String blockKey: value.getBlockingKeys()) {
             context.write(new Text(blockKey.toLowerCase()), value);
         }
-        //Logger.getLogger(BuilderMapper.class).info(key.toString() + ":" + value.toString());
+        Logger.getLogger(BuilderMapper.class).info(key.toString() + ":" + value.toString());
     }
     
     
