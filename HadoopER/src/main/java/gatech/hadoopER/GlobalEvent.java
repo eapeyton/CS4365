@@ -23,6 +23,6 @@ public class GlobalEvent extends To {
 
     @Override
     public Set<String> getBlockingKeys() {
-        return new HashSet<>(Arrays.asList(city.split(" ")));
+        return new HashSet<>(Arrays.asList(title.split(" ")));
     }
 }
