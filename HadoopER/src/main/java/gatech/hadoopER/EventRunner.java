@@ -37,32 +37,44 @@ public class EventRunner extends Configured implements Tool {
     private static final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
     private static final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
     private static final Path GROUPER_OUTPUT = HOME.suffix("/grouper-output/");
+    private FileSystem fs;
 
     @Override
     public int run(String[] args) throws Exception {
+
         Configuration conf = super.getConf();
-        Job importA = new ImportEventsA().createJob(conf);
-        Job importB = new ImportEventsB().createJob(conf);
-        Job builder = new BuildEvents().createJob(conf);
-        
-        
-        FileInputFormat.setInputPaths(importA, HOME.suffix("/a-source/compact-events.json"));
-        FileInputFormat.setInputPaths(importB, HOME.suffix("/b-source/events2.xml"));
-        
-        FileSystem fs = FileSystem.get(conf);
+        fs = FileSystem.get(conf);
+
+        runBuilder(conf);
+
+        return 0;
+    }
+    
+    public void runImport(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
         fs.delete(IMPORTER_OUTPUT, true);
         fs.mkdirs(IMPORTER_OUTPUT);
-        
+        runImportA(conf);
+        runImportB(conf);
+    }
+    
+    public void runImportA(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+
+        Job importA = new ImportEventsA().createJob(conf);
+        FileInputFormat.setInputPaths(importA, HOME.suffix("/a-source/compact-events.json"));
         FileOutputFormat.setOutputPath(importA, IMPORTER_OUTPUT.suffix("/source-a/"));
+        importA.waitForCompletion(true);
+    }
+    
+    public void runImportB(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+        
+        Job importB = new ImportEventsB().createJob(conf);
+        FileInputFormat.setInputPaths(importB, HOME.suffix("/b-source/events2.xml"));
         FileOutputFormat.setOutputPath(importB, IMPORTER_OUTPUT.suffix("/source-b/")); 
-        
-        if(!importA.waitForCompletion(true)) {
-            return 1;
-        }
-        if(!importB.waitForCompletion(true)) {
-            return 1;
-        }
-        
+        importB.waitForCompletion(true);
+    }
+    
+    public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+        Job builder = new BuildEvents().createJob(conf);
         for(Path item: Util.recurseDir(fs, IMPORTER_OUTPUT)) {
             FileInputFormat.addInputPath(builder, item);
         }
@@ -71,15 +83,11 @@ public class EventRunner extends Configured implements Tool {
         
         FileOutputFormat.setOutputPath(builder, BUILDER_OUTPUT);
         
-        if(!builder.waitForCompletion(true)) {
-            return 1;
-        }
+        builder.waitForCompletion(true);
         
         fs.delete(GROUPER_OUTPUT, true);
         Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
         grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT);
         
-        
-        return 0;
     }
 }
