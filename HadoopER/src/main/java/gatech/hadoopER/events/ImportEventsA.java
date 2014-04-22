@@ -1,6 +1,7 @@
 package gatech.hadoopER.events;
 
 import gatech.hadoopER.importer.ImporterJson;
+import org.apache.hadoop.fs.Path;
 
 /**
  *
@@ -19,6 +20,11 @@ public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
     @Override
     protected Class<SampleEventA> getFromClass() {
         return SampleEventA.class;
+    }
+
+    @Override
+    public Path getInputPath() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -8,6 +8,7 @@ import gatech.hadoopER.importer.From;
 import gatech.hadoopER.importer.ImporterCSV;
 import gatech.hadoopER.products.ImportAmazon.AmazonProduct;
 import java.util.List;
+import org.apache.hadoop.fs.Path;
 
 /**
  *
@@ -36,6 +37,11 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct,GlobalProduct> {
         to.description = from.description;
         to.manufacturer = from.manufacturer;
         to.price = from.price;
+    }
+
+    @Override
+    public Path getInputPath() {
+        return new Path("/user/epeyton.site/products/input/");
     }
     
     public class AmazonProduct extends From {

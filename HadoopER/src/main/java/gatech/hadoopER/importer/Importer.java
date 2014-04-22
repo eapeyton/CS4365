@@ -7,6 +7,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputFormat;
@@ -29,6 +30,7 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
     protected abstract void map(F from, T to);
     protected abstract void writableToFrom(Writable writable, F from);
     protected abstract Class<? extends InputFormat> getInputFormat();
+    public abstract Path getInputPath();
     
     public Job createJob(Configuration conf) throws IOException {
         Job job = Job.getInstance(conf);

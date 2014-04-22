@@ -5,6 +5,7 @@
 package gatech.hadoopER.events;
 
 import gatech.hadoopER.importer.ImporterXml;
+import org.apache.hadoop.fs.Path;
 
 /**
  *
@@ -33,6 +34,11 @@ public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
     @Override
     protected Class<SampleEventB> getFromClass() {
         return SampleEventB.class;
+    }
+
+    @Override
+    public Path getInputPath() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 
