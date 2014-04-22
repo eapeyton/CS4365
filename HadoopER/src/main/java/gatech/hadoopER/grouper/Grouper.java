@@ -85,7 +85,7 @@ public class Grouper<T extends To> {
         for(Set<T> set: deduped) {
             final T[] arr = (T[]) Array.newInstance(clazz, set.size());
             set.toArray(arr);
-            Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
+            //Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
 
             ArrayWritable arrW = new ArrayWritable(clazz);
             arrW.set(arr);

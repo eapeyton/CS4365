@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.builder;
 
 import gatech.hadoopER.importer.To;
@@ -17,8 +16,8 @@ import org.apache.log4j.Logger;
  *
  * @author eric
  */
-public class BuilderReducer extends Reducer<Text,To,To,To> {
-    
+public class BuilderReducer extends Reducer<Text, To, To, To> {
+
     private Builder builder;
 
     @Override
@@ -28,25 +27,33 @@ public class BuilderReducer extends Reducer<Text,To,To,To> {
 
     @Override
     protected void reduce(Text key, Iterable<To> values, Context context) throws IOException, InterruptedException {
-        int i=0;
+        int i = 0;
+
         Logger.getLogger(this.getClass()).info("Key: " + key.toString());
         List<To> cloned = new ArrayList<>();
-        for(To value: values) {
+        for (To value : values) {
             cloned.add(WritableUtils.clone(value, context.getConfiguration()));
         }
-        for(To value: cloned) {
-            Logger.getLogger(this.getClass()).info("Value: " + value.toString());
-            int j=0;
-            for(To otherValue: cloned) {
-                if(j > i) {
-                    if(builder.areMatching(value, otherValue)) {
-                        context.write(value, otherValue);
-                    }
-                }
-                j++;
+        if (key.toString().equals("Base-Case")) {
+            for (To value : cloned) {
+                context.write(null, value);
             }
-            i++;
+        } else {
+            for (To value : cloned) {
+                Logger.getLogger(this.getClass()).info("Value: " + value.toString());
+                int j = 0;
+                for (To otherValue : cloned) {
+                    if (j > i) {
+                        if (builder.areMatching(value, otherValue)) {
+                            context.write(value, otherValue);
+                        }
+                    }
+                    j++;
+                }
+                i++;
+            }
         }
+
     }
-    
+
 }
