@@ -16,6 +16,17 @@ import java.util.UUID;
  */
 public abstract class To extends SelfSerializingWritable {
     public UUID uuid;
+    private boolean isGrouped;
+
+    public boolean isGrouped() {
+        return isGrouped;
+    }
+
+    public void setGrouped(boolean isGrouped) {
+        this.isGrouped = isGrouped;
+    }
     
     public abstract Set<String> getBlockingKeys();
+    
+    
 }

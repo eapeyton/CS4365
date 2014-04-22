@@ -19,6 +19,7 @@ public class BuildEvents extends Builder<GlobalEvent> {
 
     @Override
     protected boolean areMatching(GlobalEvent a, GlobalEvent b) {
+        
         return true;
     }
     
