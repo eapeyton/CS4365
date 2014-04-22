@@ -22,7 +22,7 @@ public class Exporter implements ERJob {
     @Override
     public Job createJob(Configuration conf) throws IOException {
         Job job = Job.getInstance(conf);
-        job.setJobName(this.getClass().getSimpleName() + " Builder");
+        job.setJobName(this.getClass().getSimpleName());
         
         job.getConfiguration().setClass("Exporter", this.getClass(), this.getClass());
         Class<?> toClass = conf.getClass("ToClass", null);
@@ -30,8 +30,8 @@ public class Exporter implements ERJob {
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(ExporterMapper.class);
         
-        conf.setBoolean("mapreduce.map.output.compress", false);
-        conf.setBoolean("mapreduce.output.fileoutputformat.compress", false);
+        conf.setBoolean("mapred.compress.map.output", false);
+        conf.setBoolean("mapred.output.compress", false);
         
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(NullWritable.class);
