@@ -79,7 +79,7 @@ public class EventRunner extends Configured implements Tool {
         importB.waitForCompletion(true);
     }
     
-    public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+    public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         Job builder = new BuildEvents().createJob(conf);
         for(Path item: Util.recurseDir(fs, IMPORTER_OUTPUT)) {
             FileInputFormat.addInputPath(builder, item);
@@ -109,7 +109,7 @@ public class EventRunner extends Configured implements Tool {
         combiner.waitForCompletion(true);
     }
     
-    public class GEArrayWritable extends ArrayWritable {
+    public static class GEArrayWritable extends ArrayWritable {
         public GEArrayWritable() {
             super(GlobalEvent.class);
         }
