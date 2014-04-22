@@ -29,7 +29,7 @@ public class Exporter implements ERJob {
 
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(ExporterMapper.class);
-        
+        TextOutputFormat.setCompressOutput(job, false);
         conf.setBoolean("mapred.compress.map.output", false);
         conf.setBoolean("mapred.output.compress", false);
         
