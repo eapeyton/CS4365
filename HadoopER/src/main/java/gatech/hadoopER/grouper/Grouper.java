@@ -76,6 +76,7 @@ public class Grouper<T extends To> {
         for(Set<T> set: map.values()) {
             deduped.add(set);
         }
+        Logger.getLogger(this.getClass()).info("DDSize: " + deduped.size());
         SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(ArrayWritable.class));
         int i=0;
         for(Set<T> set: deduped) {
