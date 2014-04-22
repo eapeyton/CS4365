@@ -4,7 +4,7 @@
 
 package gatech.hadoopER.importer;
 
-import gatech.hadoopER.GlobalEvent;
+import gatech.hadoopER.events.GlobalEvent;
 import org.apache.hadoop.io.ArrayWritable;
 
 /**

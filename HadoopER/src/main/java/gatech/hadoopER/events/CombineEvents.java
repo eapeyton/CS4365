@@ -2,7 +2,7 @@
  * CS 4365 Project
  */
 
-package gatech.hadoopER;
+package gatech.hadoopER.events;
 
 import gatech.hadoopER.combiner.Combiner;
 import java.util.List;

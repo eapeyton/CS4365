@@ -22,7 +22,6 @@ import org.apache.log4j.Logger;
  */
 public abstract class Builder<T extends To> implements ERJob {
     
-    protected abstract Class<T> getTo(); 
     protected abstract boolean areMatching(T a, T b);
 
     @Override
@@ -36,13 +35,13 @@ public abstract class Builder<T extends To> implements ERJob {
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(BuilderMapper.class);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(getTo());
+        job.setMapOutputValueClass(toClass);
         
         
         job.setReducerClass(BuilderReducer.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         job.setOutputKeyClass(toClass);
-        job.setOutputValueClass(getTo());
+        job.setOutputValueClass(toClass);
         
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(1);

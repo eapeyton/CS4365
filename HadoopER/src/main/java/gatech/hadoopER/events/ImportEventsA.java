@@ -1,4 +1,4 @@
-package gatech.hadoopER;
+package gatech.hadoopER.events;
 
 import gatech.hadoopER.importer.ImporterJson;
 
@@ -14,16 +14,6 @@ public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
         to.datetime = from.date + from.time;
         to.location = from.location;
         to.other = from.description;
-    }
-
-    @Override
-    protected Class<SampleEventA> getFrom() {
-        return SampleEventA.class;
-    }
-
-    @Override
-    protected Class<GlobalEvent> getTo() {
-        return GlobalEvent.class;
     }
     
 }

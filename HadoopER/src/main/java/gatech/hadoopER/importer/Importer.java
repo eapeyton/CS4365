@@ -22,27 +22,30 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
  */
 public abstract class Importer<F extends From,T extends To> implements ERJob {
     
+    private Class<F> fromClass;
+    private Class<T> toClass;
+    
     protected abstract void map(F from, T to);
     protected abstract void writableToFrom(Writable writable, F from);
     protected abstract Class<? extends InputFormat> getInputFormat();
-    protected abstract Class<F> getFrom();
-    protected abstract Class<T> getTo(); 
     
     public Job createJob(Configuration conf) throws IOException {
         Job job = Job.getInstance(conf);
         job.setJobName(this.getClass().getSimpleName() + "Importer");
         
         job.getConfiguration().setClass("Importer", this.getClass(), this.getClass());
+        fromClass = (Class<F>)job.getConfiguration().getClass("FromClass", null);
+        toClass = (Class<T>)job.getConfiguration().getClass("ToClass", null);
         
         job.setInputFormatClass(getInputFormat()); 
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(getFrom());
+        job.setMapOutputValueClass(fromClass);
         
         job.setReducerClass(ImporterReducer.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(getTo());
+        job.setOutputValueClass(toClass);
         
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(1);
@@ -61,7 +64,7 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
     
     protected T getFromTo(F from) {
         try {
-            T to = getTo().newInstance();
+            T to = toClass.newInstance();
             to.uuid = UUID.randomUUID();
             map(from, to);
             return to;
@@ -73,7 +76,7 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
         
     protected F getFromWritable(Writable writable) {
         try {
-            F from = getFrom().newInstance();
+            F from = fromClass.newInstance();
             writableToFrom(writable, from);
             return from;
         } catch (InstantiationException | IllegalAccessException ex) {

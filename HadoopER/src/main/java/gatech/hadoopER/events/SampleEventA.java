@@ -1,4 +1,4 @@
-package gatech.hadoopER;
+package gatech.hadoopER.events;
 
 import gatech.hadoopER.importer.From;
 
