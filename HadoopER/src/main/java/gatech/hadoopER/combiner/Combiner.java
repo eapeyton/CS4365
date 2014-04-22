@@ -38,10 +38,11 @@ public abstract class Combiner<T extends To> implements ERJob {
         
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(CombinerMapper.class);
-        job.setMapOutputKeyClass(IntWritable.class);
-        job.setMapOutputValueClass(toClass);
+
+        job.setOutputKeyClass(IntWritable.class);
+        job.setOutputValueClass(toClass);;
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
-        job.setReducerClass(Reducer.class);
+        //job.setReducerClass(Reducer.class);
         
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(0);
