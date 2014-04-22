@@ -47,7 +47,7 @@ public class Grouper<T extends To> {
         this.toArrayClass = (Class<ArrayWritable>)conf.getClass("ToArrayClass", null);
     }
 
-    public void group(Path input, Path output) throws IOException {
+    public void group(Path input, Path output) throws IOException, InstantiationException, IllegalAccessException {
         FileSystem fs = FileSystem.get(conf);
         SequenceFile.Reader reader;
         HashSet<T> allSet  = new HashSet<>();
@@ -99,7 +99,7 @@ public class Grouper<T extends To> {
             set.toArray(arr);
             //Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
 
-            ArrayWritable arrW = new ArrayWritable(toClass);
+            ArrayWritable arrW = toArrayClass.newInstance();
             arrW.set(arr);
             writer.append(new IntWritable(i), arrW);
             i++;
@@ -107,7 +107,7 @@ public class Grouper<T extends To> {
         for (T other: allSet) {
             final T[] singArr = (T[]) Array.newInstance(toClass, 1);
             singArr[0] = other;
-            ArrayWritable otherW = new ArrayWritable(toClass);
+            ArrayWritable otherW = toArrayClass.newInstance();
             otherW.set(singArr);
             writer.append(new IntWritable(i), otherW);
             i++;
