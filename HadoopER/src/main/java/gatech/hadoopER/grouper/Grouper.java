@@ -6,6 +6,7 @@ package gatech.hadoopER.grouper;
 import gatech.hadoopER.importer.To;
 import gatech.hadoopER.util.Util;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -82,7 +83,7 @@ public class Grouper<T extends To> {
         SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(ArrayWritable.class));
         int i=0;
         for(Set<T> set: deduped) {
-            T[] arr = (T[])new Object[set.size()];
+            final T[] arr = (T[]) Array.newInstance(clazz, set.size());
             set.toArray(arr);
             Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
 
