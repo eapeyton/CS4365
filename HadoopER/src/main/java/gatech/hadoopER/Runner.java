@@ -5,7 +5,6 @@ package gatech.hadoopER;
 
 import gatech.hadoopER.builder.Builder;
 import gatech.hadoopER.combiner.Combiner;
-import gatech.hadoopER.events.EventRunner;
 import gatech.hadoopER.exporter.Exporter;
 import gatech.hadoopER.grouper.Grouper;
 import gatech.hadoopER.importer.Importer;
@@ -46,8 +45,8 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
     private final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
     private final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
     private final Path GROUPER_OUTPUT = HOME.suffix("/grouper-output/");
-    private final Path COMBINER_OUTPUT = HOME.suffix("/combiner-output");
-    private final Path EXPORTER_OUTPUT = HOME.suffix("/exporter-output");
+    private final Path COMBINER_OUTPUT = HOME.suffix("/combiner-output/");
+    private final Path EXPORTER_OUTPUT = HOME.suffix("/exporter-output/");
     private FileSystem fs;
 
     public static void start(Runner self, String[] args) throws Exception {
