@@ -45,7 +45,7 @@ public class EventRunner extends Configured implements Tool {
         Configuration conf = super.getConf();
         fs = FileSystem.get(conf);
 
-        runImport(conf);
+        //runImport(conf);
         runBuilder(conf);
 
         return 0;
