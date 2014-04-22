@@ -30,6 +30,8 @@ public class Exporter implements ERJob {
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(ExporterMapper.class);
         
+        conf.setBoolean("mapreduce.map.output.compress", false);
+        conf.setBoolean("mapreduce.output.fileoutputformat.compress", false);
         
         job.setOutputFormatClass(TextOutputFormat.class);
         job.setOutputKeyClass(NullWritable.class);
