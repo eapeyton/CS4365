@@ -51,9 +51,9 @@ public class EventRunner extends Configured implements Tool {
         conf.setClass("ToArrayClass", GEArrayWritable.class, GEArrayWritable.class);
         fs = FileSystem.get(conf);
 
-        runImport(conf);
-        runBuilder(conf);
-        runCombiner(conf);
+        //runImport(conf);
+        //runBuilder(conf);
+        //runCombiner(conf);
         runExport(conf);
 
         return 0;
