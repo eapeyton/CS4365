@@ -87,6 +87,7 @@ public class EventRunner extends Configured implements Tool {
         builder.waitForCompletion(true);
         
         fs.delete(GROUPER_OUTPUT, true);
+        fs.mkdirs(GROUPER_OUTPUT);
         Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
         grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"), GlobalEvent.class);
         
