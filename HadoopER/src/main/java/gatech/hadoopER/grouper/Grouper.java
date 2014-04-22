@@ -44,7 +44,7 @@ public class Grouper<T extends To> {
         this.key = key;
         this.value = value;
         this.toClass = (Class<T>)conf.getClass("ToClass", null);
-        this.toArrayClass = (Class<ArrayWritable>)conf.getClass("ToArrayClass", null);
+        this.toArrayClass = ToArrayWritable.class;//(Class<ArrayWritable>)conf.getClass("ToArrayClass", null);
     }
 
     public void group(Path input, Path output) throws IOException, InstantiationException, IllegalAccessException {
