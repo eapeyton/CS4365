@@ -31,7 +31,8 @@ public abstract class Builder<T extends To> implements ERJob {
         job.setJobName(this.getClass().getSimpleName() + " Builder");
         
         job.getConfiguration().setClass("Builder", this.getClass(), this.getClass());
-        
+        Class<?> toClass = conf.getClass("ToClass", null);
+
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(BuilderMapper.class);
         job.setMapOutputKeyClass(Text.class);
@@ -39,7 +40,7 @@ public abstract class Builder<T extends To> implements ERJob {
         
         job.setReducerClass(BuilderReducer.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
-        job.setOutputKeyClass(getTo());
+        job.setOutputKeyClass(toClass);
         job.setOutputValueClass(getTo());
         
         job.setJarByClass(this.getClass());

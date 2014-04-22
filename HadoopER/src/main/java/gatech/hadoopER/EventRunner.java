@@ -37,16 +37,19 @@ public class EventRunner extends Configured implements Tool {
     private static final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
     private static final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
     private static final Path GROUPER_OUTPUT = HOME.suffix("/grouper-output/");
+    private static final Path COMBINER_OUTPUT = HOME.suffix("/combiner-output");
     private FileSystem fs;
 
     @Override
     public int run(String[] args) throws Exception {
 
         Configuration conf = super.getConf();
+        conf.setClass("ToClass", GlobalEvent.class, GlobalEvent.class);
         fs = FileSystem.get(conf);
 
         //runImport(conf);
         runBuilder(conf);
+        runCombiner(conf);
 
         return 0;
     }
@@ -90,6 +93,18 @@ public class EventRunner extends Configured implements Tool {
         fs.mkdirs(GROUPER_OUTPUT);
         Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
         grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"), GlobalEvent.class);
+        
+    }
+
+    public void runCombiner(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+        Job combiner = new CombineEvents().createJob(conf);
+        FileInputFormat.addInputPath(combiner, GROUPER_OUTPUT);
+        
+        fs.delete(COMBINER_OUTPUT, true);
+        
+        FileOutputFormat.setOutputPath(combiner, COMBINER_OUTPUT);
+        
+        combiner.waitForCompletion(true);
         
     }
 }
