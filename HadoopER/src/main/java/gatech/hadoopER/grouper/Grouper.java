@@ -4,6 +4,7 @@
 package gatech.hadoopER.grouper;
 
 import gatech.hadoopER.importer.To;
+import gatech.hadoopER.importer.ToArrayWritable;
 import gatech.hadoopER.util.Util;
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -35,7 +36,7 @@ public class Grouper<T extends To> {
 
     private Configuration conf;
     private Class<T> toClass;
-    private Class<ArrayWritable> toArrayClass;
+    private Class<ToArrayWritable> toArrayClass;
     private T key;
     private T value;
 
