@@ -38,6 +38,7 @@ public abstract class Builder<T extends To> implements ERJob {
         job.setMapOutputKeyClass(Text.class);
         job.setMapOutputValueClass(getTo());
         
+        
         job.setReducerClass(BuilderReducer.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         job.setOutputKeyClass(toClass);

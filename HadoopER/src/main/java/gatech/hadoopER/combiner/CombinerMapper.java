@@ -20,7 +20,7 @@ import org.apache.log4j.Logger;
  *
  * @author eric
  */
-public class CombinerMapper extends Mapper<IntWritable,ToArrayWritable,IntWritable,To> {
+public class CombinerMapper extends Mapper<IntWritable,ArrayWritable,IntWritable,To> {
     
     private Combiner combiner;
 
@@ -30,7 +30,7 @@ public class CombinerMapper extends Mapper<IntWritable,ToArrayWritable,IntWritab
     }
 
     @Override
-    protected void map(IntWritable key, ToArrayWritable value, Context context) throws IOException, InterruptedException {
+    protected void map(IntWritable key, ArrayWritable value, Context context) throws IOException, InterruptedException {
         Writable[] group = value.get();
         Logger.getLogger(this.getClass()).info("Combiner found:" + Arrays.toString(group));
         List<Writable> groupList = Arrays.asList(group);

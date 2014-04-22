@@ -4,6 +4,7 @@
 
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.GlobalEvent;
 import org.apache.hadoop.io.ArrayWritable;
 
 /**
@@ -11,7 +12,8 @@ import org.apache.hadoop.io.ArrayWritable;
  * @author eric
  */
 public class ToArrayWritable extends ArrayWritable {
+
     public ToArrayWritable() {
-        super(To.class);
+        super(GlobalEvent.class);
     }
 }

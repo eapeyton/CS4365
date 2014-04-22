@@ -40,6 +40,7 @@ public abstract class Combiner<T extends To> implements ERJob {
         job.setMapOutputValueClass(toClass);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         
+        
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(0);
         return job;    

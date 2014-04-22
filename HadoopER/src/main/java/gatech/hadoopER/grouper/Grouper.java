@@ -32,11 +32,11 @@ import org.apache.log4j.Logger;
  *
  * @author eric
  */
-public class Grouper<T extends To> {
+public class Grouper<T extends To,A extends ArrayWritable> {
 
     private Configuration conf;
     private Class<T> toClass;
-    private Class<ToArrayWritable> toArrayClass;
+    private Class<A> toArrayClass;
     private T key;
     private T value;
 
@@ -45,7 +45,7 @@ public class Grouper<T extends To> {
         this.key = key;
         this.value = value;
         this.toClass = (Class<T>)conf.getClass("ToClass", null);
-        this.toArrayClass = ToArrayWritable.class;//(Class<ArrayWritable>)conf.getClass("ToArrayClass", null);
+        this.toArrayClass = (Class<A>)conf.getClass("ToArrayClass", null);
     }
 
     public void group(Path input, Path output) throws IOException, InstantiationException, IllegalAccessException {
@@ -100,7 +100,7 @@ public class Grouper<T extends To> {
             set.toArray(arr);
             //Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
 
-            ArrayWritable arrW = toArrayClass.newInstance();
+            A arrW = toArrayClass.newInstance();
             arrW.set(arr);
             writer.append(new IntWritable(i), arrW);
             i++;
@@ -108,7 +108,7 @@ public class Grouper<T extends To> {
         for (T other: allSet) {
             final T[] singArr = (T[]) Array.newInstance(toClass, 1);
             singArr[0] = other;
-            ArrayWritable otherW = toArrayClass.newInstance();
+            A otherW = toArrayClass.newInstance();
             otherW.set(singArr);
             writer.append(new IntWritable(i), otherW);
             i++;

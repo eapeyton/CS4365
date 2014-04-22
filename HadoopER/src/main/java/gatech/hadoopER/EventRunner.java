@@ -93,7 +93,7 @@ public class EventRunner extends Configured implements Tool {
         
         fs.delete(GROUPER_OUTPUT, true);
         fs.mkdirs(GROUPER_OUTPUT);
-        Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
+        Grouper<GlobalEvent,GEArrayWritable> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
         grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"));
         
     }
@@ -109,9 +109,4 @@ public class EventRunner extends Configured implements Tool {
         combiner.waitForCompletion(true);
     }
     
-    public static class GEArrayWritable extends ArrayWritable {
-        public GEArrayWritable() {
-            super(GlobalEvent.class);
-        }
-    }
 }
