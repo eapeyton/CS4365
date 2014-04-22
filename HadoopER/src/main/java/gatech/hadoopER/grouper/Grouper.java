@@ -79,7 +79,9 @@ public class Grouper<T extends To> {
         SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(ArrayWritable.class));
         int i=0;
         for(Set<T> set: deduped) {
-            Writable[] arr = (Writable[])set.toArray();
+            T[] arr = (T[])set.toArray();
+                        Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
+
             ArrayWritable arrW = new ArrayWritable(clazz);
             arrW.set(arr);
             writer.append(new IntWritable(i), arrW);

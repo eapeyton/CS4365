@@ -88,7 +88,7 @@ public class EventRunner extends Configured implements Tool {
         
         fs.delete(GROUPER_OUTPUT, true);
         Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
-        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT, GlobalEvent.class);
+        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"), GlobalEvent.class);
         
     }
 }
