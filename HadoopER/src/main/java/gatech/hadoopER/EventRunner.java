@@ -4,6 +4,7 @@
 
 package gatech.hadoopER;
 
+import gatech.hadoopER.exporter.Exporter;
 import gatech.hadoopER.grouper.Grouper;
 import gatech.hadoopER.util.Util;
 import java.io.IOException;
@@ -39,6 +40,7 @@ public class EventRunner extends Configured implements Tool {
     private static final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
     private static final Path GROUPER_OUTPUT = HOME.suffix("/grouper-output/");
     private static final Path COMBINER_OUTPUT = HOME.suffix("/combiner-output");
+    private static final Path EXPORTER_OUTPUT = HOME.suffix("/exporter-output");
     private FileSystem fs;
 
     @Override
@@ -52,6 +54,7 @@ public class EventRunner extends Configured implements Tool {
         runImport(conf);
         runBuilder(conf);
         runCombiner(conf);
+        runExport(conf);
 
         return 0;
     }
@@ -107,6 +110,18 @@ public class EventRunner extends Configured implements Tool {
         FileOutputFormat.setOutputPath(combiner, COMBINER_OUTPUT);
         
         combiner.waitForCompletion(true);
+    }
+
+    public void runExport(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+        Job exporter = new Exporter().createJob(conf);
+        FileInputFormat.addInputPath(exporter, COMBINER_OUTPUT);
+        
+        fs.delete(EXPORTER_OUTPUT, true);
+        
+        FileOutputFormat.setOutputPath(exporter, EXPORTER_OUTPUT);
+        
+        exporter.waitForCompletion(true);
+        
     }
     
 }
