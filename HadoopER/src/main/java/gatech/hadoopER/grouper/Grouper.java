@@ -6,16 +6,23 @@ package gatech.hadoopER.grouper;
 import gatech.hadoopER.importer.To;
 import gatech.hadoopER.util.Util;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.ArrayWritable;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.MapFile;
 import org.apache.hadoop.io.SequenceFile;
 import org.apache.hadoop.io.SequenceFile.Reader;
+import org.apache.hadoop.io.SequenceFile.Writer;
+import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableUtils;
 import org.apache.log4j.Logger;
 
@@ -35,7 +42,7 @@ public class Grouper<T extends To> {
         this.value = value;
     }
 
-    public void group(Path input, Path output) throws IOException {
+    public void group(Path input, Path output, Class<T> clazz) throws IOException {
         FileSystem fs = FileSystem.get(conf);
         SequenceFile.Reader reader;
         Map<T, Set<T>> map = new HashMap<>();
@@ -65,9 +72,22 @@ public class Grouper<T extends To> {
             }
             reader.close();
         }
+        Set<Set<T>> deduped = new HashSet<>();
         for(Set<T> set: map.values()) {
-            Logger.getLogger(this.getClass()).info(Arrays.toString(set.toArray()));
+            deduped.add(set);
         }
+        SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(ArrayWritable.class));
+        int i=0;
+        for(Set<T> set: deduped) {
+            Writable[] arr = (Writable[])set.toArray();
+            ArrayWritable arrW = new ArrayWritable(clazz);
+            arrW.set(arr);
+            writer.append(new IntWritable(i), arrW);
+            i++;
+        }
+        writer.close();
+        
+        
 
     }
 }

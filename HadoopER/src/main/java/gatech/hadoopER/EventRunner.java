@@ -45,7 +45,7 @@ public class EventRunner extends Configured implements Tool {
         Configuration conf = super.getConf();
         fs = FileSystem.get(conf);
 
-        runImport(conf);
+        //runImport(conf);
         runBuilder(conf);
 
         return 0;
@@ -88,7 +88,7 @@ public class EventRunner extends Configured implements Tool {
         
         fs.delete(GROUPER_OUTPUT, true);
         Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
-        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT);
+        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT, GlobalEvent.class);
         
     }
 }
