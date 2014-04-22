@@ -89,7 +89,7 @@ public class Grouper<T extends To> {
             deduped.add(set);
         }
         Logger.getLogger(this.getClass()).info("DDSize: " + deduped.size());
-        SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(ArrayWritable.class));
+        SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(toArrayClass));
         int i = 0;
         for (Set<T> set : deduped) {
             for(T groupItem: set) {
