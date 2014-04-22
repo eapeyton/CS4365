@@ -15,5 +15,10 @@ public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
         to.location = from.location;
         to.other = from.description;
     }
+
+    @Override
+    protected Class<SampleEventA> getFromClass() {
+        return SampleEventA.class;
+    }
     
 }

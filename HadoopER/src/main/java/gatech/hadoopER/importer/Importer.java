@@ -25,6 +25,7 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
     private Class<F> fromClass;
     private Class<T> toClass;
     
+    protected abstract Class<F> getFromClass();
     protected abstract void map(F from, T to);
     protected abstract void writableToFrom(Writable writable, F from);
     protected abstract Class<? extends InputFormat> getInputFormat();
@@ -34,7 +35,8 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
         job.setJobName(this.getClass().getSimpleName() + "Importer");
         
         job.getConfiguration().setClass("Importer", this.getClass(), this.getClass());
-        fromClass = (Class<F>)job.getConfiguration().getClass("FromClass", null);
+        fromClass = getFromClass();
+        
         toClass = (Class<T>)job.getConfiguration().getClass("ToClass", null);
         
         job.setInputFormatClass(getInputFormat()); 

@@ -29,6 +29,11 @@ public class ImportEventsB extends ImporterXml<SampleEventB, GlobalEvent>{
     public String getTagName() {
         return "event";
     }
+
+    @Override
+    protected Class<SampleEventB> getFromClass() {
+        return SampleEventB.class;
+    }
     
 
     

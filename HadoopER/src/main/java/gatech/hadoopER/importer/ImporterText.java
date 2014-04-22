@@ -9,7 +9,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
  *
  * @author eric
  */
-public abstract class ImporterText<F extends From,T extends To> extends Importer<F,T> {
+public abstract class ImporterText<F extends From, T extends To> extends Importer<F,T> {
 
     @Override
     protected Class<? extends InputFormat> getInputFormat() {
