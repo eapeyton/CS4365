@@ -36,7 +36,7 @@ public class BuilderReducer extends Reducer<Text, To, To, To> {
         }
         if (key.toString().equals("Base-Case")) {
             for (To value : cloned) {
-                context.write(null, value);
+                context.write(value, value);
             }
         } else {
             for (To value : cloned) {

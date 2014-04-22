@@ -46,43 +46,51 @@ public class Grouper<T extends To> {
     public void group(Path input, Path output, Class<T> clazz) throws IOException {
         FileSystem fs = FileSystem.get(conf);
         SequenceFile.Reader reader;
+        HashSet<T> allSet  = new HashSet<>();
         Map<T, Set<T>> map = new HashMap<>();
         for (Path item : Util.recurseDir(fs, input)) {
             reader = new SequenceFile.Reader(conf, Reader.file(item));
             while (reader.next(key, value)) {
                 T clonedKey = WritableUtils.clone(key, conf);
                 T clonedValue = WritableUtils.clone(value, conf);
-                if (!map.containsKey(clonedKey) && !map.containsKey(clonedValue)) {
-                    Set<T> set = new HashSet<>();
-                    set.add(clonedKey);
-                    set.add(clonedValue);
-                    map.put(clonedKey, set);
-                    map.put(clonedValue, set);
-                } else if (map.containsKey(clonedKey) && map.containsKey(clonedValue)) {
-                    for (T clone : map.get(clonedValue)) {
-                        map.put(clone, map.get(clonedKey));
-                    }
-                    map.get(clonedKey).addAll(map.get(clonedValue));
-                } else if (map.containsKey(clonedKey)) {
-                    map.get(clonedKey).add(clonedValue);
-                    map.put(clonedValue, map.get(clonedKey));
+                if (clonedKey.equals(clonedValue)) {
+                    allSet.add(clonedKey);
                 } else {
-                    map.get(clonedValue).add(clonedKey);
-                    map.put(clonedKey, map.get(clonedValue));
+                    if (!map.containsKey(clonedKey) && !map.containsKey(clonedValue)) {
+                        Set<T> set = new HashSet<>();
+                        set.add(clonedKey);
+                        set.add(clonedValue);
+                        map.put(clonedKey, set);
+                        map.put(clonedValue, set);
+                    } else if (map.containsKey(clonedKey) && map.containsKey(clonedValue)) {
+                        for (T clone : map.get(clonedValue)) {
+                            map.put(clone, map.get(clonedKey));
+                        }
+                        map.get(clonedKey).addAll(map.get(clonedValue));
+                    } else if (map.containsKey(clonedKey)) {
+                        map.get(clonedKey).add(clonedValue);
+                        map.put(clonedValue, map.get(clonedKey));
+                    } else {
+                        map.get(clonedValue).add(clonedKey);
+                        map.put(clonedKey, map.get(clonedValue));
+                    }
                 }
             }
             reader.close();
         }
-                Logger.getLogger(this.getClass()).info("ValuesSize: " + map.values().size());
+        Logger.getLogger(this.getClass()).info("ValuesSize: " + map.values().size());
 
         Set<Set<T>> deduped = new HashSet<>();
-        for(Set<T> set: map.values()) {
+        for (Set<T> set : map.values()) {
             deduped.add(set);
         }
         Logger.getLogger(this.getClass()).info("DDSize: " + deduped.size());
         SequenceFile.Writer writer = SequenceFile.createWriter(conf, Writer.file(output), Writer.keyClass(IntWritable.class), Writer.valueClass(ArrayWritable.class));
-        int i=0;
-        for(Set<T> set: deduped) {
+        int i = 0;
+        for (Set<T> set : deduped) {
+            for(T groupItem: set) {
+                allSet.remove(groupItem);
+            }
             final T[] arr = (T[]) Array.newInstance(clazz, set.size());
             set.toArray(arr);
             //Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
@@ -92,9 +100,15 @@ public class Grouper<T extends To> {
             writer.append(new IntWritable(i), arrW);
             i++;
         }
+        for (T other: allSet) {
+            final T[] singArr = (T[]) Array.newInstance(clazz, 1);
+            singArr[0] = other;
+            ArrayWritable otherW = new ArrayWritable(clazz);
+            otherW.set(singArr);
+            writer.append(new IntWritable(i), otherW);
+            i++;
+        }
         writer.close();
-        
-        
 
     }
 }

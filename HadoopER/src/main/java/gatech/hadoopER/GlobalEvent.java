@@ -32,7 +32,7 @@ public class GlobalEvent extends To {
             return false;
         }
         final GlobalEvent other = (GlobalEvent) obj;
-        return true;
+        return other.hashCode() == this.hashCode();
     }
 
     @Override
