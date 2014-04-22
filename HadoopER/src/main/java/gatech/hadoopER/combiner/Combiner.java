@@ -9,11 +9,13 @@ import gatech.hadoopER.importer.To;
 import java.io.IOException;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.mapreduce.IdentityTableReducer;
 import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.JobContext;
+import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.SequenceFileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
 
@@ -39,7 +41,7 @@ public abstract class Combiner<T extends To> implements ERJob {
         job.setMapOutputKeyClass(IntWritable.class);
         job.setMapOutputValueClass(toClass);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
-        
+        job.setReducerClass(Reducer.class);
         
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(0);
