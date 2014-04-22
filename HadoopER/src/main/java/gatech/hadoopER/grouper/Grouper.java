@@ -72,6 +72,8 @@ public class Grouper<T extends To> {
             }
             reader.close();
         }
+                Logger.getLogger(this.getClass()).info("ValuesSize: " + map.values().size());
+
         Set<Set<T>> deduped = new HashSet<>();
         for(Set<T> set: map.values()) {
             deduped.add(set);
