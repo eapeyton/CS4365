@@ -14,6 +14,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileStatus;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -45,6 +46,7 @@ public class EventRunner extends Configured implements Tool {
 
         Configuration conf = super.getConf();
         conf.setClass("ToClass", GlobalEvent.class, GlobalEvent.class);
+        conf.setClass("ToArrayClass", GEArrayWritable.class, GEArrayWritable.class);
         fs = FileSystem.get(conf);
 
         //runImport(conf);
@@ -92,7 +94,7 @@ public class EventRunner extends Configured implements Tool {
         fs.delete(GROUPER_OUTPUT, true);
         fs.mkdirs(GROUPER_OUTPUT);
         Grouper<GlobalEvent> grouper = new Grouper<>(conf, new GlobalEvent(), new GlobalEvent());
-        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"), GlobalEvent.class);
+        grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"));
         
     }
 
@@ -105,6 +107,11 @@ public class EventRunner extends Configured implements Tool {
         FileOutputFormat.setOutputPath(combiner, COMBINER_OUTPUT);
         
         combiner.waitForCompletion(true);
-        
+    }
+    
+    public class GEArrayWritable extends ArrayWritable {
+        public GEArrayWritable() {
+            super(GlobalEvent.class);
+        }
     }
 }

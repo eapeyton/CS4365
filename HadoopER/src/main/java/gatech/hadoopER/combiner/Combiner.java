@@ -9,6 +9,7 @@ import gatech.hadoopER.importer.To;
 import java.io.IOException;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.io.ArrayWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
@@ -31,6 +32,7 @@ public abstract class Combiner<T extends To> implements ERJob {
         
         job.getConfiguration().setClass("Combiner", this.getClass(), this.getClass());
         Class<?> toClass = conf.getClass("ToClass", null);
+        Class<?> toArrayClass = conf.getClass("ToArrayClass", null);
         
         job.setInputFormatClass(SequenceFileInputFormat.class); 
         job.setMapperClass(CombinerMapper.class);

@@ -34,6 +34,8 @@ import org.apache.log4j.Logger;
 public class Grouper<T extends To> {
 
     private Configuration conf;
+    private Class<T> toClass;
+    private Class<ArrayWritable> toArrayClass;
     private T key;
     private T value;
 
@@ -41,9 +43,11 @@ public class Grouper<T extends To> {
         this.conf = conf;
         this.key = key;
         this.value = value;
+        this.toClass = (Class<T>)conf.getClass("ToClass", null);
+        this.toArrayClass = (Class<ArrayWritable>)conf.getClass("ToArrayClass", null);
     }
 
-    public void group(Path input, Path output, Class<T> clazz) throws IOException {
+    public void group(Path input, Path output) throws IOException {
         FileSystem fs = FileSystem.get(conf);
         SequenceFile.Reader reader;
         HashSet<T> allSet  = new HashSet<>();
@@ -91,19 +95,19 @@ public class Grouper<T extends To> {
             for(T groupItem: set) {
                 allSet.remove(groupItem);
             }
-            final T[] arr = (T[]) Array.newInstance(clazz, set.size());
+            final T[] arr = (T[]) Array.newInstance(toClass, set.size());
             set.toArray(arr);
             //Logger.getLogger(this.getClass()).info(Arrays.toString(arr));
 
-            ArrayWritable arrW = new ArrayWritable(clazz);
+            ArrayWritable arrW = new ArrayWritable(toClass);
             arrW.set(arr);
             writer.append(new IntWritable(i), arrW);
             i++;
         }
         for (T other: allSet) {
-            final T[] singArr = (T[]) Array.newInstance(clazz, 1);
+            final T[] singArr = (T[]) Array.newInstance(toClass, 1);
             singArr[0] = other;
-            ArrayWritable otherW = new ArrayWritable(clazz);
+            ArrayWritable otherW = new ArrayWritable(toClass);
             otherW.set(singArr);
             writer.append(new IntWritable(i), otherW);
             i++;
