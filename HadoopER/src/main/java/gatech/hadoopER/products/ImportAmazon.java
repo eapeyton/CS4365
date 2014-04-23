@@ -31,10 +31,10 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
 
     @Override
     protected void map(AmazonProduct from, GlobalProduct to) {
-        to.id.add(from.title);
+        to.id.add(from.id);
         to.name.add(from.title);
-        to.description.add(from.title);
-        to.manufacturer.add(from.title);
+        to.description.add(from.description);
+        to.manufacturer.add(from.manufacturer);
         to.price = from.price;
     }
 
