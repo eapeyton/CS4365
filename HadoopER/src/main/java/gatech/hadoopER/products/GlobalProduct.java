@@ -22,10 +22,10 @@ public class GlobalProduct extends To {
         return "GlobalProduct{" + "id=" + id + ", name=" + name + ", description=" + description + ", manufacturer=" + manufacturer + ", price=" + price + '}';
     }
 
-    StringSet id;
-    StringSet name;
-    StringSet description;
-    StringSet manufacturer;
+    StringSet id = new StringSet();
+    StringSet name = new StringSet();
+    StringSet description = new StringSet();
+    StringSet manufacturer = new StringSet();
     double price;
 
     @Override
