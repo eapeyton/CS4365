@@ -40,7 +40,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
     public abstract Combiner<T> getCombiner();
 
     public abstract Path getHome();
-
+    
     private final Path HOME = getHome();
     private final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
     private final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
@@ -60,6 +60,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         Configuration conf = super.getConf();
         conf.setClass("ToClass", getToClass(), getToClass());
         conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
+        conf.setInt("NumReduceTasks", 50);
         fs = FileSystem.get(conf);
         runImport(conf);
         runBuilder(conf);

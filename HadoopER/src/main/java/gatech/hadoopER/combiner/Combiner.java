@@ -40,7 +40,7 @@ public abstract class Combiner<T extends To> implements ERJob {
         //job.setReducerClass(Reducer.class);
 
         job.setJarByClass(this.getClass());
-        job.setNumReduceTasks(0);
+        job.setNumReduceTasks(conf.getInt("NumReduceTasks", 1));
         return job;
     }
 
