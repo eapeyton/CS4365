@@ -70,7 +70,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
     public int run(String[] args) throws Exception {
         boolean first_run = true;
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"), "utf-8"))) {
-            int[] reducer_values = {50, 100, 200};
+            int[] reducer_values = {20};
             for (int reducer_value : reducer_values) {
                 Configuration conf = super.getConf();
                 conf.setClass("ToClass", getToClass(), getToClass());
