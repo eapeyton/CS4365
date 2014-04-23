@@ -4,6 +4,7 @@
 package gatech.hadoopER.products;
 
 import gatech.hadoopER.builder.Builder;
+import gatech.hadoopER.util.ERUtil;
 
 /**
  *
@@ -13,7 +14,10 @@ public class ProductBuilder extends Builder<GlobalProduct> {
 
     @Override
     protected boolean areMatching(GlobalProduct a, GlobalProduct b) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(ERUtil.computeJaccardSimilarity(a.name, b.name) > .5 && ERUtil.getPercentDifference(a.price, b.price) < .2) {
+            return true;
+        }
+        return false;
     }
 
 }
