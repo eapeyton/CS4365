@@ -44,7 +44,7 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct,GlobalProduct> {
         return new Path("/user/epeyton.site/products/input/");
     }
     
-    public class AmazonProduct extends From {
+    public static class AmazonProduct extends From {
         
         String id;
         String title;
