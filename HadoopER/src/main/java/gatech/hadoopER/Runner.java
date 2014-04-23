@@ -47,8 +47,8 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
     public abstract Combiner<T> getCombiner();
 
     public abstract Path getHome();
-    
-    private LinkedHashMap<String,String> stats = new LinkedHashMap<>();
+
+    private LinkedHashMap<String, String> stats = new LinkedHashMap<>();
     private Timer timer = new Timer();
     private final Path HOME = getHome();
     private final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
@@ -70,16 +70,16 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         conf.setClass("ToClass", getToClass(), getToClass());
         conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
         conf.setInt("NumReduceTasks", 50);
-        stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks",-1)));
+        stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
         fs = FileSystem.get(conf);
         runImport(conf);
-        runBuilder(conf);
-        runCombiner(conf);
-        runExporter(conf);
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"),"utf-8"))) {
+        //runBuilder(conf);
+        //runCombiner(conf);
+        //runExporter(conf);
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"), "utf-8"))) {
             writer.write(StringUtils.join(stats.keySet(), ","));
             writer.newLine();
-            writer.write(StringUtils.join(stats.values(),","));
+            writer.write(StringUtils.join(stats.values(), ","));
         }
         return 0;
     }
@@ -90,18 +90,18 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         long records = 0;
         long bytes = 0;
         timer.start();
-        for (Importer importer : getImporters()) {   
+        for (Importer importer : getImporters()) {
             Job importerJob = importer.createJob(conf);
             FileInputFormat.setInputPaths(importerJob, importer.getInputPath());
             FileOutputFormat.setOutputPath(importerJob, IMPORTER_OUTPUT.suffix("/" + importer.getClass().getSimpleName() + "/"));
             importerJob.waitForCompletion(true);
-            records += importerJob.getCounters().getGroup("Map-Reduce Framework").findCounter("Map input records").getValue();
-                        bytes += importerJob.getCounters().getGroup("Map-Reduce Framework").findCounter("Map input bytes").getValue();
+            records += importerJob.getCounters().getGroup("org.apache.hadoop.mapreduce.TaskCounter").findCounter("MAP_INPUT_RECORDS").getValue();
+            //bytes += importerJob.getCounters().getGroup("org.apache.hadoop.mapreduce.TaskCounter").findCounter("Map input bytes").getValue();
 
         }
         stats.put("Importer Total Time", Long.toString(timer.end()));
         stats.put("Importer Input Records", Long.toString(records));
-        stats.put("Importer Input Bytes", Long.toString(bytes));
+        //stats.put("Importer Input Bytes", Long.toString(bytes));
     }
 
     public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -113,12 +113,11 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         fs.delete(BUILDER_OUTPUT, true);
 
         FileOutputFormat.setOutputPath(builder, BUILDER_OUTPUT);
-        
+
         timer.start();
         builder.waitForCompletion(true);
         stats.put("Builder Time", Long.toString(timer.end()));
-        
-        
+
         fs.delete(GROUPER_OUTPUT, true);
         fs.mkdirs(GROUPER_OUTPUT);
         Grouper<T, A> grouper = new Grouper<>(conf, getToClass().newInstance(), getToClass().newInstance());
@@ -150,14 +149,15 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         exporter.waitForCompletion(true);
         stats.put("Exporter Time", Long.toString(timer.end()));
     }
-    
+
     public class Timer {
+
         private long startTime;
-        
+
         public void start() {
             startTime = System.currentTimeMillis();
         }
-        
+
         public long end() {
             long duration = System.currentTimeMillis() - startTime;
             return TimeUnit.MILLISECONDS.toSeconds(duration);
