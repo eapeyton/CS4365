@@ -64,6 +64,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         runImport(conf);
         runBuilder(conf);
         runCombiner(conf);
+        runExporter(conf);
         return 0;
     }
 
@@ -109,7 +110,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         combiner.waitForCompletion(true);
     }
 
-    public void runExport(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
+    public void runExporter(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
         Job exporter = new Exporter().createJob(conf);
         FileInputFormat.addInputPath(exporter, COMBINER_OUTPUT);
 
