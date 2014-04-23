@@ -37,10 +37,8 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
         job.setJobName(this.getClass().getSimpleName() + "Importer");
         
         job.getConfiguration().setClass("Importer", this.getClass(), this.getClass());
-        fromClass = getFromClass();
-        
-        toClass = (Class<T>)job.getConfiguration().getClass("ToClass", null);
-        
+        job.getConfiguration().setClass("FromClass", getFromClass(), getFromClass());
+                
         job.setInputFormatClass(getInputFormat()); 
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
@@ -59,7 +57,10 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
     protected static Importer getInstance(JobContext context) {
         try {
             Class<Importer> importerClass = (Class<Importer>)context.getConfiguration().getClass("Importer", null);
-            return importerClass.newInstance();
+            Importer importer = importerClass.newInstance();
+            importer.fromClass = context.getConfiguration().getClass("FromClass", null);
+            importer.toClass = context.getConfiguration().getClass("ToClass", null);
+            return importer;
         } catch (InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(ImporterMapper.class.getName()).log(Level.SEVERE, null, ex);
             throw new RuntimeException(ex);
