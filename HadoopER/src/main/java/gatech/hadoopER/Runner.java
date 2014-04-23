@@ -68,21 +68,29 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
 
     @Override
     public int run(String[] args) throws Exception {
-        Configuration conf = super.getConf();
-        conf.setClass("ToClass", getToClass(), getToClass());
-        conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
-        conf.setInt("NumReduceTasks", 50);
-        stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
-        fs = FileSystem.get(conf);
-        runImport(conf);
-        runBuilder(conf);
-        runCombiner(conf);
-        runExporter(conf);
+        boolean first_run = true;
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"), "utf-8"))) {
-            writer.write(StringUtils.join(stats.keySet(), ","));
-            writer.newLine();
-            writer.write(StringUtils.join(stats.values(), ","));
+            int[] reducer_values = {1, 20, 50, 100};
+            for (int reducer_value : reducer_values) {
+                Configuration conf = super.getConf();
+                conf.setClass("ToClass", getToClass(), getToClass());
+                conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
+                conf.setInt("NumReduceTasks", 50);
+                stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
+                fs = FileSystem.get(conf);
+                runImport(conf);
+                runBuilder(conf);
+                runCombiner(conf);
+                runExporter(conf);
+                if(first_run) {
+                    writer.write(StringUtils.join(stats.keySet(), ","));
+                    first_run = false;
+                }
+                writer.newLine();
+                writer.write(StringUtils.join(stats.values(), ","));
+            }
         }
+
         return 0;
     }
 
@@ -164,7 +172,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
             "MILLIS_MAPS",
             "MILLIS_REDUCES"
         };
-        for(String counterName: task_counters) {
+        for (String counterName : task_counters) {
             Counter counter = job.getCounters().getGroup(group_task).findCounter(counterName);
             stats.put(jobName + " " + counter.getDisplayName(), Long.toString(counter.getValue()));
         }
