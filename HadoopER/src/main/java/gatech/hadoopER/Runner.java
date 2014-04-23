@@ -75,7 +75,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
                 Configuration conf = super.getConf();
                 conf.setClass("ToClass", getToClass(), getToClass());
                 conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
-                conf.setInt("NumReduceTasks", 50);
+                conf.setInt("NumReduceTasks", reducer_value);
                 stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
                 fs = FileSystem.get(conf);
                 runImport(conf);
