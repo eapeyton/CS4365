@@ -70,6 +70,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         conf.setClass("ToClass", getToClass(), getToClass());
         conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
         conf.setInt("NumReduceTasks", 50);
+        stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks",-1)));
         fs = FileSystem.get(conf);
         runImport(conf);
         runBuilder(conf);
@@ -86,17 +87,21 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
     public void runImport(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
         fs.delete(IMPORTER_OUTPUT, true);
         fs.mkdirs(IMPORTER_OUTPUT);
+        long records = 0;
+        long bytes = 0;
         timer.start();
-        for (Importer importer : getImporters()) {
-            
+        for (Importer importer : getImporters()) {   
             Job importerJob = importer.createJob(conf);
             FileInputFormat.setInputPaths(importerJob, importer.getInputPath());
             FileOutputFormat.setOutputPath(importerJob, IMPORTER_OUTPUT.suffix("/" + importer.getClass().getSimpleName() + "/"));
             importerJob.waitForCompletion(true);
+            records += importerJob.getCounters().getGroup("Map-Reduce Framework").findCounter("Map input records").getValue();
+                        bytes += importerJob.getCounters().getGroup("Map-Reduce Framework").findCounter("Map input bytes").getValue();
+
         }
         stats.put("Importer Total Time", Long.toString(timer.end()));
-        
-
+        stats.put("Importer Input Records", Long.toString(records));
+        stats.put("Importer Input Bytes", Long.toString(bytes));
     }
 
     public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException, InstantiationException, IllegalAccessException {
