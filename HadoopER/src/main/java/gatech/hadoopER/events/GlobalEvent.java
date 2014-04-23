@@ -46,6 +46,6 @@ public class GlobalEvent extends To {
 
     @Override
     public Set<String> getBlockingKeys() {
-        return ERUtil.splitWords(title);
+        return ERUtil.splitString(city);
     }
 }

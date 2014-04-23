@@ -14,7 +14,17 @@ public class ProductCombiner extends Combiner<GlobalProduct> {
 
     @Override
     public GlobalProduct combine(List<GlobalProduct> entities) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        GlobalProduct product = new GlobalProduct();
+        double avgPrice = 0;
+        for(GlobalProduct entity: entities) {
+            product.name.addAll(entity.name);
+            product.description.addAll(entity.description);
+            product.manufacturer.addAll(entity.manufacturer);
+            product.id.addAll(entity.id);
+            avgPrice += entity.price;
+        }
+        product.price = avgPrice / entities.size();
+        return product;
     }
 
 }

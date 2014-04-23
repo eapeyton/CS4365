@@ -63,6 +63,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         fs = FileSystem.get(conf);
         runImport(conf);
         runBuilder(conf);
+        runCombiner(conf);
         return 0;
     }
 

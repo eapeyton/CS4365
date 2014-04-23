@@ -14,7 +14,7 @@ public class ProductBuilder extends Builder<GlobalProduct> {
 
     @Override
     protected boolean areMatching(GlobalProduct a, GlobalProduct b) {
-        if(ERUtil.computeJaccardSimilarity(a.name, b.name) > .5 && ERUtil.getPercentDifference(a.price, b.price) < .2) {
+        if(ERUtil.computeJaccardOfWords(a.name, b.name) > .5 && ERUtil.getPercentDifference(a.price, b.price) < .2) {
             return true;
         }
         return false;

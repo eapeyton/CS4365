@@ -3,6 +3,7 @@
  */
 package gatech.hadoopER.products;
 
+import gatech.hadoopER.StringSet;
 import gatech.hadoopER.importer.To;
 import gatech.hadoopER.util.ERUtil;
 import java.util.Set;
@@ -21,15 +22,15 @@ public class GlobalProduct extends To {
         return "GlobalProduct{" + "id=" + id + ", name=" + name + ", description=" + description + ", manufacturer=" + manufacturer + ", price=" + price + '}';
     }
 
-    String id;
-    String name;
-    String description;
-    String manufacturer;
+    StringSet id;
+    StringSet name;
+    StringSet description;
+    StringSet manufacturer;
     double price;
 
     @Override
     public Set<String> getBlockingKeys() {
-        return ERUtil.splitWords(name);
+        return ERUtil.splitToWords(name);
     }
 
     public static class GPArrayWritable extends ArrayWritable {

@@ -22,9 +22,11 @@ public class ERUtil {
     public static void main(String[] args) {
         String s1 = "microsoft(r) money 2007 deluxe";
         String s2 = "microsoft(r) expression web 1.0";
-        System.out.println(computeJaccardSimilarity(s1,s2));
+        System.out.println(computeJaccardOfString(s1,s2));
         System.out.println(computeLevenshteinDistance(s1,s2));
         System.out.println(computeJaroWinklerDistance(s1, s2));
+        String[] set = {"hello", "my name", "is", "jonas"};
+        System.out.println(splitToWords(new HashSet<>(Arrays.asList(set))));
     }
     
     public static double getPercentDifference(double a, double b) {
@@ -48,33 +50,43 @@ public class ERUtil {
         }
         return files;
     }
-
-    public static Set<String> splitWords(String name) {
-        return new HashSet<>(Arrays.asList(name.split("\\s+")));
+    
+    public static Set<String> splitToWords(Set<String> strSet) {
+        HashSet<String> words = new HashSet<>();
+        for (String str: strSet) {
+            words.addAll(splitString(str));
+        }
+        return words;
     }
-
-    public static double computeJaccardSimilarity(String similar1, String similar2) {
+    
+    public static Set<String> splitString(String str) {
+        return new HashSet<>(Arrays.asList(str.split("\\s+")));
+    }
+    
+    public static double computeJaccardOfWords(Set<String> set1, Set<String> set2) {
+        return computeJaccardSimilarity(splitToWords(set1),splitToWords(set2));
+    }
+    
+    public static double computeJaccardOfString(String similar1, String similar2) {
         HashSet<String> h1 = new HashSet<>();
         HashSet<String> h2 = new HashSet<>();
+        h1.add(similar1);
+        h2.add(similar2);
+        return computeJaccardOfWords(h1, h2);
+    }
 
-        for (String s : similar1.split("\\s+")) {
-            h1.add(s);
-        }
-        for (String s : similar2.split("\\s+")) {
-            h2.add(s);
-        }
-
-        int sizeh1 = h1.size();
+    public static double computeJaccardSimilarity(Set<String> similar1, Set<String> similar2) {
+        int sizeh1 = similar1.size();
         //Retains all elements in h3 that are contained in h2 ie intersection
-        h1.retainAll(h2);
+        similar1.retainAll(similar2);
         //h1 now contains the intersection of h1 and h2
 
-        h2.removeAll(h1);
+        similar2.removeAll(similar1);
             //h2 now contains unique elements
 
         //Union 
-        int union = sizeh1 + h2.size();
-        int intersection = h1.size();
+        int union = sizeh1 + similar2.size();
+        int intersection = similar1.size();
 
         return (double) intersection / union;
     }
