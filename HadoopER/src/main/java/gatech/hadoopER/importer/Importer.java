@@ -42,12 +42,12 @@ public abstract class Importer<F extends From,T extends To> implements ERJob {
         job.setInputFormatClass(getInputFormat()); 
         job.setMapperClass(ImporterMapper.class);
         job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(fromClass);
+        job.setMapOutputValueClass(getFromClass());
         
         job.setReducerClass(ImporterReducer.class);
         job.setOutputFormatClass(SequenceFileOutputFormat.class);
         job.setOutputKeyClass(Text.class);
-        job.setOutputValueClass(toClass);
+        job.setOutputValueClass(conf.getClass("ToClass", null));
         
         job.setJarByClass(this.getClass());
         job.setNumReduceTasks(1);
