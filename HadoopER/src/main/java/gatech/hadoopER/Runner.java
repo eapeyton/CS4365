@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang.StringUtils;
@@ -24,6 +25,7 @@ import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.ArrayWritable;
+import org.apache.hadoop.mapreduce.Counter;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
@@ -73,9 +75,9 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
         fs = FileSystem.get(conf);
         runImport(conf);
-        //runBuilder(conf);
-        //runCombiner(conf);
-        //runExporter(conf);
+        runBuilder(conf);
+        runCombiner(conf);
+        runExporter(conf);
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"), "utf-8"))) {
             writer.write(StringUtils.join(stats.keySet(), ","));
             writer.newLine();
@@ -96,12 +98,9 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
             FileOutputFormat.setOutputPath(importerJob, IMPORTER_OUTPUT.suffix("/" + importer.getClass().getSimpleName() + "/"));
             importerJob.waitForCompletion(true);
             records += importerJob.getCounters().getGroup("org.apache.hadoop.mapreduce.TaskCounter").findCounter("MAP_INPUT_RECORDS").getValue();
-            //bytes += importerJob.getCounters().getGroup("org.apache.hadoop.mapreduce.TaskCounter").findCounter("Map input bytes").getValue();
-
         }
         stats.put("Importer Total Time", Long.toString(timer.end()));
         stats.put("Importer Input Records", Long.toString(records));
-        //stats.put("Importer Input Bytes", Long.toString(bytes));
     }
 
     public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException, InstantiationException, IllegalAccessException {
@@ -117,6 +116,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         timer.start();
         builder.waitForCompletion(true);
         stats.put("Builder Time", Long.toString(timer.end()));
+        writeStats("Builder", builder, stats);
 
         fs.delete(GROUPER_OUTPUT, true);
         fs.mkdirs(GROUPER_OUTPUT);
@@ -136,6 +136,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         timer.start();
         combiner.waitForCompletion(true);
         stats.put("Combiner Time", Long.toString(timer.end()));
+        writeStats("Combiner", combiner, stats);
     }
 
     public void runExporter(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
@@ -148,6 +149,25 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         timer.start();
         exporter.waitForCompletion(true);
         stats.put("Exporter Time", Long.toString(timer.end()));
+        writeStats("Exporter", exporter, stats);
+    }
+
+    private void writeStats(String jobName, Job job, Map<String, String> stats) throws IOException {
+        String group_task = "org.apache.hadoop.mapreduce.TaskCounter";
+        String[] task_counters = {
+            "MAP_INPUT_RECORDS",
+            "REDUCE_INPUT_GROUPS",
+            "REDUCE_INPUT_RECORDS"
+        };
+        String group_job = "org.apache.hadoop.mapreduce.JobCounter";
+        String[] job_counters = {
+            "MILLIS_MAPS",
+            "MILLIS_REDUCES"
+        };
+        for(String counterName: task_counters) {
+            Counter counter = job.getCounters().getGroup(group_task).findCounter(counterName);
+            stats.put(jobName + " " + counter.getDisplayName(), Long.toString(counter.getValue()));
+        }
     }
 
     public class Timer {
