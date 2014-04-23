@@ -7,6 +7,7 @@ package gatech.hadoopER.importer;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.hadoop.io.Text;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -19,7 +20,11 @@ public abstract class ImporterCSV<F extends From,T extends To> extends ImporterT
     @Override
     protected void textToFrom(Text text, F from) {
         String[] cols = text.toString().split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
-        csvToFrom(Arrays.asList(cols), from);
+        try {
+            csvToFrom(Arrays.asList(cols), from);
+        } catch(RuntimeException ex) {
+            Logger.getLogger(this.getClass()).warn("Import failed for " + text.toString(),ex);
+        }
     }
     
 }
