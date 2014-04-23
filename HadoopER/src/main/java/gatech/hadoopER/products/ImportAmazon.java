@@ -40,7 +40,7 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
 
     @Override
     public Path getInputPath() {
-        return new Path("/user/epeyton.site/products/input-big/20products.csv");
+        return new Path("/user/epeyton.site/products/input-med/");
     }
 
     public static class AmazonProduct extends From {
