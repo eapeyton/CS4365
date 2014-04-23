@@ -12,7 +12,12 @@ import org.apache.hadoop.io.ArrayWritable;
  *
  * @author eric
  */
-public class GlobalProduct extends To {
+public class GlobalProduct extends To {;
+
+    @Override
+    public String toString() {
+        return "GlobalProduct{" + "id=" + id + ", name=" + name + ", description=" + description + ", manufacturer=" + manufacturer + ", price=" + price + '}';
+    }
     
     String id;
     String name;
