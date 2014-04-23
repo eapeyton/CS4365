@@ -40,7 +40,7 @@ public class BuilderReducer extends Reducer<Text, To, To, To> {
             }
         } else {
             for (To value : cloned) {
-                Logger.getLogger(this.getClass()).info("Value: " + value.toString());
+                //Logger.getLogger(this.getClass()).info("Value: " + value.toString());
                 int j = 0;
                 for (To otherValue : cloned) {
                     if (j > i) {

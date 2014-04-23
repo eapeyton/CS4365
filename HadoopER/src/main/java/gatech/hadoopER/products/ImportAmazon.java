@@ -18,9 +18,9 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
     @Override
     protected void csvToFrom(List<String> cols, AmazonProduct from) {
         from.id = cols.get(0);
-        from.title = cols.get(1);
-        from.description = cols.get(2);
-        from.manufacturer = cols.get(3);
+        from.title = cols.get(1).replaceAll("\"", "");
+        from.description = cols.get(2).replaceAll("\"", "");
+        from.manufacturer = cols.get(3).replaceAll("\"", "");
         from.price = Double.parseDouble(cols.get(4));
     }
 

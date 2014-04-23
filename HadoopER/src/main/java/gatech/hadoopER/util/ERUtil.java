@@ -54,7 +54,7 @@ public class ERUtil {
     public static Set<String> splitToWords(Set<String> strSet) {
         HashSet<String> words = new HashSet<>();
         for (String str: strSet) {
-            words.addAll(splitString(str));
+            words.addAll(splitString(str.replaceAll("[^a-z]","")));
         }
         return words;
     }
