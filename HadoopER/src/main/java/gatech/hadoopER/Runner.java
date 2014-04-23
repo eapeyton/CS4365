@@ -10,8 +10,15 @@ import gatech.hadoopER.grouper.Grouper;
 import gatech.hadoopER.importer.Importer;
 import gatech.hadoopER.importer.To;
 import gatech.hadoopER.util.ERUtil;
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -41,6 +48,8 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
 
     public abstract Path getHome();
     
+    private LinkedHashMap<String,String> stats = new LinkedHashMap<>();
+    private Timer timer = new Timer();
     private final Path HOME = getHome();
     private final Path IMPORTER_OUTPUT = HOME.suffix("/importer-output/");
     private final Path BUILDER_OUTPUT = HOME.suffix("/builder-output/");
@@ -66,18 +75,27 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         runBuilder(conf);
         runCombiner(conf);
         runExporter(conf);
+        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"),"utf-8"))) {
+            writer.write(StringUtils.join(stats.keySet(), ","));
+            writer.newLine();
+            writer.write(StringUtils.join(stats.values(),","));
+        }
         return 0;
     }
 
     public void runImport(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
         fs.delete(IMPORTER_OUTPUT, true);
         fs.mkdirs(IMPORTER_OUTPUT);
+        timer.start();
         for (Importer importer : getImporters()) {
+            
             Job importerJob = importer.createJob(conf);
             FileInputFormat.setInputPaths(importerJob, importer.getInputPath());
             FileOutputFormat.setOutputPath(importerJob, IMPORTER_OUTPUT.suffix("/" + importer.getClass().getSimpleName() + "/"));
             importerJob.waitForCompletion(true);
         }
+        stats.put("Importer Total Time", Long.toString(timer.end()));
+        
 
     }
 
@@ -90,14 +108,18 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         fs.delete(BUILDER_OUTPUT, true);
 
         FileOutputFormat.setOutputPath(builder, BUILDER_OUTPUT);
-
+        
+        timer.start();
         builder.waitForCompletion(true);
-
+        stats.put("Builder Time", Long.toString(timer.end()));
+        
+        
         fs.delete(GROUPER_OUTPUT, true);
         fs.mkdirs(GROUPER_OUTPUT);
         Grouper<T, A> grouper = new Grouper<>(conf, getToClass().newInstance(), getToClass().newInstance());
+        timer.start();
         grouper.group(BUILDER_OUTPUT, GROUPER_OUTPUT.suffix("/groups.seq"));
-
+        stats.put("Grouper Time", Long.toString(timer.end()));
     }
 
     public void runCombiner(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
@@ -107,8 +129,9 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         fs.delete(COMBINER_OUTPUT, true);
 
         FileOutputFormat.setOutputPath(combiner, COMBINER_OUTPUT);
-
+        timer.start();
         combiner.waitForCompletion(true);
+        stats.put("Combiner Time", Long.toString(timer.end()));
     }
 
     public void runExporter(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException {
@@ -118,9 +141,22 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         fs.delete(EXPORTER_OUTPUT, true);
 
         FileOutputFormat.setOutputPath(exporter, EXPORTER_OUTPUT);
-
+        timer.start();
         exporter.waitForCompletion(true);
-
+        stats.put("Exporter Time", Long.toString(timer.end()));
+    }
+    
+    public class Timer {
+        private long startTime;
+        
+        public void start() {
+            startTime = System.currentTimeMillis();
+        }
+        
+        public long end() {
+            long duration = System.currentTimeMillis() - startTime;
+            return TimeUnit.MILLISECONDS.toSeconds(duration);
+        }
     }
 
 }
