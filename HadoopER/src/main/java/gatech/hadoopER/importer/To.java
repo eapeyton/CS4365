@@ -9,15 +9,14 @@ import java.util.UUID;
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 /**
  *
  * @author eric
  */
 public abstract class To extends SelfSerializingWritable {
+
     public UUID uuid;
-    
+
     public abstract Set<String> getBlockingKeys();
-    
-    
+
 }

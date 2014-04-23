@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.events;
 
 import gatech.hadoopER.combiner.Combiner;
@@ -17,5 +16,5 @@ public class CombineEvents extends Combiner<GlobalEvent> {
     public GlobalEvent combine(List<GlobalEvent> entities) {
         return entities.get(0);
     }
-    
+
 }

@@ -12,13 +12,14 @@ import org.apache.log4j.Logger;
  * @author eric
  */
 public class ImporterMapper extends Mapper<LongWritable, Writable, Text, From> {
-    private Importer<From,To> importer;
-    
+
+    private Importer<From, To> importer;
+
     @Override
     protected void setup(Context context) {
         importer = Importer.getInstance(context);
     }
-    
+
     @Override
     protected void map(LongWritable key, Writable value, Mapper<LongWritable, Writable, Text, From>.Context context) throws IOException, InterruptedException {
         From from = importer.getFromWritable(value);

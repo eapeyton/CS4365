@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.products;
 
 import gatech.hadoopER.importer.From;
@@ -14,7 +13,7 @@ import org.apache.hadoop.fs.Path;
  *
  * @author eric
  */
-public class ImportAmazon extends ImporterCSV<AmazonProduct,GlobalProduct> {
+public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
 
     @Override
     protected void csvToFrom(List<String> cols, AmazonProduct from) {
@@ -43,9 +42,9 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct,GlobalProduct> {
     public Path getInputPath() {
         return new Path("/user/epeyton.site/products/input/");
     }
-    
+
     public static class AmazonProduct extends From {
-        
+
         String id;
         String title;
         String description;
@@ -56,6 +55,6 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct,GlobalProduct> {
         public String getKey() {
             return id;
         }
-        
+
     }
 }

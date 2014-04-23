@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.products;
 
 import gatech.hadoopER.Runner;
@@ -17,8 +16,8 @@ import org.apache.hadoop.fs.Path;
  *
  * @author eric
  */
-public class ProductRunner extends Runner<GlobalProduct,GPArrayWritable> {
-    
+public class ProductRunner extends Runner<GlobalProduct, GPArrayWritable> {
+
     public static void main(String[] args) throws Exception {
         start(new ProductRunner(), args);
     }
@@ -35,7 +34,7 @@ public class ProductRunner extends Runner<GlobalProduct,GPArrayWritable> {
 
     @Override
     public List<Importer> getImporters() {
-        Importer[] importers = { new ImportAmazon() };
+        Importer[] importers = {new ImportAmazon()};
         return Arrays.asList(importers);
     }
 
@@ -53,5 +52,5 @@ public class ProductRunner extends Runner<GlobalProduct,GPArrayWritable> {
     public Path getHome() {
         return new Path("/user/epeyton.site/products/");
     }
-    
+
 }

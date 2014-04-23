@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.importer;
 
 import gatech.hadoopER.events.GlobalEvent;

@@ -7,7 +7,7 @@ import org.apache.hadoop.fs.Path;
  *
  * @author eric
  */
-public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
+public class ImportEventsA extends ImporterJson<SampleEventA, GlobalEvent> {
 
     @Override
     protected void map(SampleEventA from, GlobalEvent to) {
@@ -26,5 +26,5 @@ public class ImportEventsA extends ImporterJson<SampleEventA,GlobalEvent> {
     public Path getInputPath() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

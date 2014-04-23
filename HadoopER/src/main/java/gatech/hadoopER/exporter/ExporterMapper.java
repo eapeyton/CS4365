@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.exporter;
 
 import com.google.gson.Gson;
@@ -16,8 +15,8 @@ import org.apache.hadoop.mapreduce.Mapper;
  *
  * @author eric
  */
-public class ExporterMapper extends Mapper<IntWritable,To,NullWritable,Text> {
-    
+public class ExporterMapper extends Mapper<IntWritable, To, NullWritable, Text> {
+
     private Gson gson;
 
     @Override
@@ -30,5 +29,5 @@ public class ExporterMapper extends Mapper<IntWritable,To,NullWritable,Text> {
         String json = gson.toJson(value);
         context.write(NullWritable.get(), new Text(json));
     }
- 
+
 }

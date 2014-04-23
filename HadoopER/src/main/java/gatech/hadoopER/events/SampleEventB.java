@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.events;
 
 import gatech.hadoopER.importer.From;
@@ -11,6 +10,7 @@ import gatech.hadoopER.importer.From;
  * @author eric
  */
 public class SampleEventB extends From {
+
     long id;
     String name;
     String description;
@@ -26,5 +26,5 @@ public class SampleEventB extends From {
     public String getKey() {
         return Long.toString(id);
     }
-    
+
 }

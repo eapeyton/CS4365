@@ -1,13 +1,10 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.combiner;
 
 import gatech.hadoopER.importer.To;
-import gatech.hadoopER.importer.ToArrayWritable;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.hadoop.io.ArrayWritable;
@@ -20,8 +17,8 @@ import org.apache.log4j.Logger;
  *
  * @author eric
  */
-public class CombinerMapper extends Mapper<IntWritable,ArrayWritable,IntWritable,To> {
-    
+public class CombinerMapper extends Mapper<IntWritable, ArrayWritable, IntWritable, To> {
+
     private Combiner combiner;
 
     @Override
@@ -37,5 +34,5 @@ public class CombinerMapper extends Mapper<IntWritable,ArrayWritable,IntWritable
         To combined = combiner.combine(groupList);
         context.write(key, combined);
     }
-    
+
 }

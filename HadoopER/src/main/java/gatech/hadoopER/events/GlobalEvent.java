@@ -1,8 +1,7 @@
 package gatech.hadoopER.events;
 
 import gatech.hadoopER.importer.To;
-import java.util.Arrays;
-import java.util.HashSet;
+import gatech.hadoopER.util.ERUtil;
 import java.util.Objects;
 import java.util.Set;
 
@@ -47,6 +46,6 @@ public class GlobalEvent extends To {
 
     @Override
     public Set<String> getBlockingKeys() {
-        return new HashSet<>(Arrays.asList(title.split(" ")));
+        return ERUtil.splitWords(title);
     }
 }

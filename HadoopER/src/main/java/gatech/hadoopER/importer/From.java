@@ -6,18 +6,18 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 /**
  *
  * @author eric
  */
 public abstract class From extends SelfSerializingWritable {
+
     public abstract String getKey();
-    
-    public void readMap(Map<String,String> map) {
+
+    public void readMap(Map<String, String> map) {
         Field[] fields = this.getClass().getDeclaredFields();
-        for(Field field: fields) {
-            if(map.containsKey(field.getName())) {
+        for (Field field : fields) {
+            if (map.containsKey(field.getName())) {
                 try {
                     field.setAccessible(true);
                     field.set(this, map.get(field.getName()));

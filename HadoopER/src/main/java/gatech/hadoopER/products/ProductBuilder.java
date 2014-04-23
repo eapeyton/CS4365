@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.products;
 
 import gatech.hadoopER.builder.Builder;
@@ -16,5 +15,5 @@ public class ProductBuilder extends Builder<GlobalProduct> {
     protected boolean areMatching(GlobalProduct a, GlobalProduct b) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

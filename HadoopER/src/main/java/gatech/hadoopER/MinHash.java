@@ -3,7 +3,6 @@
  */
 package gatech.hadoopER;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,21 +18,21 @@ import org.jdom2.input.SAXBuilder;
  * @author eric
  */
 public class MinHash {
-    
+
     private static final int NUM = 200;
     private static final int GRAM = 3;
 
     public static void main(String[] args) throws FileNotFoundException, JDOMException, IOException {
         ArrayList<String> descriptions = new ArrayList<>();
-        
+
         SAXBuilder sax = new SAXBuilder();
         Document doc = sax.build("/Users/eric/Development/CS4365/HadoopER/src/main/resources/descriptions.txt");
         Element root = doc.getRootElement();
         System.out.println(root.getChildren("event").size());
-        for(Element descs: root.getChildren()) {
+        for (Element descs : root.getChildren()) {
             descriptions.add(descs.getTextNormalize());
         }
-        
+
         int[] rands = new int[NUM];
         Random rand = new Random();
         for (int i = 0; i < rands.length; i++) {
@@ -49,7 +48,7 @@ public class MinHash {
             for (int i = 0; i < nDescript.length() - GRAM - 1; i++) {
                 String shingle = "" + nDescript.charAt(i);
                 for (int j = 1; j < GRAM; j++) {
-                    shingle += nDescript.charAt(i+j);
+                    shingle += nDescript.charAt(i + j);
                 }
                 shingles.add(shingle.toLowerCase());
             }
@@ -67,31 +66,31 @@ public class MinHash {
             minHashes[descriptions.indexOf(description)] = mins;
         }
         int[][] counts = new int[descriptions.size()][descriptions.size()];
-        for(int[] dcount: counts) {
-            for(int i=0; i<dcount.length; i++) {
+        for (int[] dcount : counts) {
+            for (int i = 0; i < dcount.length; i++) {
                 dcount[i] = 0;
             }
         }
-        for(int i=0; i<minHashes.length; i++) {
+        for (int i = 0; i < minHashes.length; i++) {
             int[] m = minHashes[i];
-            for(int n: m) {
+            for (int n : m) {
                 int count = 0;
-                for(int j=0; j<minHashes.length; j++) {
+                for (int j = 0; j < minHashes.length; j++) {
                     int[] m2 = minHashes[j];
-                    for(int n2: m2) {
-                        if(n==n2 && i != j) {
+                    for (int n2 : m2) {
+                        if (n == n2 && i != j) {
                             counts[i][j]++;
                         }
                     }
                 }
-                if(count > 1) {
+                if (count > 1) {
                 }
             }
         }
-        for(int[] minHash: minHashes) {
+        for (int[] minHash : minHashes) {
             System.out.println(Arrays.toString(minHash));
         }
-        for(int[] count: counts) {
+        for (int[] count : counts) {
             //System.out.println(Arrays.toString(count));
         }
     }

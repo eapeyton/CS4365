@@ -23,5 +23,5 @@ public class SampleEventA extends From {
     public String getKey() {
         return name + date + time;
     }
-   
+
 }

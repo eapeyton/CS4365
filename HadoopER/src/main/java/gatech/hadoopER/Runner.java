@@ -9,7 +9,7 @@ import gatech.hadoopER.exporter.Exporter;
 import gatech.hadoopER.grouper.Grouper;
 import gatech.hadoopER.importer.Importer;
 import gatech.hadoopER.importer.To;
-import gatech.hadoopER.util.Util;
+import gatech.hadoopER.util.ERUtil;
 import java.io.IOException;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;
@@ -79,7 +79,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
 
     public void runBuilder(Configuration conf) throws IOException, InterruptedException, ClassNotFoundException, InstantiationException, IllegalAccessException {
         Job builder = getBuilder().createJob(conf);
-        for (Path item : Util.recurseDir(fs, IMPORTER_OUTPUT)) {
+        for (Path item : ERUtil.recurseDir(fs, IMPORTER_OUTPUT)) {
             FileInputFormat.addInputPath(builder, item);
         }
 

@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.io;
 
 import java.io.ByteArrayInputStream;
@@ -38,7 +37,7 @@ public abstract class SelfSerializingWritable implements Writable, Serializable 
 
             memStream.close();
         }
-        
+
         return myBytes;
     }
 

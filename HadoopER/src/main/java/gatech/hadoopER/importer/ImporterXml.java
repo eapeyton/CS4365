@@ -1,7 +1,6 @@
 /*
  * CS 4365 Project
  */
-
 package gatech.hadoopER.importer;
 
 import gatech.hadoopER.io.XMLInputFormat;
@@ -24,19 +23,19 @@ import org.jdom2.input.SAXBuilder;
  *
  * @author eric
  */
-public abstract class ImporterXml<F extends From, T extends To> extends Importer<F,T> {
-    
+public abstract class ImporterXml<F extends From, T extends To> extends Importer<F, T> {
+
     public abstract String getTagName();
 
     @Override
     protected void writableToFrom(Writable writable, F from) {
-        Text value = (Text)writable;
+        Text value = (Text) writable;
         SAXBuilder sax = new SAXBuilder();
-        HashMap<String,String> map = new HashMap<>();
+        HashMap<String, String> map = new HashMap<>();
         try {
             Document doc = sax.build(new StringReader(value.toString()));
             Element root = doc.getRootElement();
-            for(Element child: root.getChildren()) {
+            for (Element child : root.getChildren()) {
                 map.put(child.getName().toLowerCase(), child.getTextTrim());
             }
             from.readMap(map);
@@ -44,18 +43,18 @@ public abstract class ImporterXml<F extends From, T extends To> extends Importer
             Logger.getLogger(ImporterXml.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     protected Class<? extends InputFormat> getInputFormat() {
         return XMLInputFormat.class;
     }
-    
+
     @Override
     public Job createJob(Configuration conf) throws IOException {
         Job job = super.createJob(conf);
-        job.getConfiguration().set(XMLInputFormat.START_TAG_KEY, "<" + getTagName() +">");
+        job.getConfiguration().set(XMLInputFormat.START_TAG_KEY, "<" + getTagName() + ">");
         job.getConfiguration().set(XMLInputFormat.END_TAG_KEY, "</" + getTagName() + ">");
         return job;
     }
-    
+
 }
