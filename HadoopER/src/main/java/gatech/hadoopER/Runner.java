@@ -61,6 +61,7 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
         conf.setClass("ToClass", getToClass(), getToClass());
         conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
         fs = FileSystem.get(conf);
+        runImport(conf);
         return 0;
     }
 
