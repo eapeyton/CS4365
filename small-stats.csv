@@ -1,0 +1,5 @@
+Num. Reducers,Importer Total Time,Importer Input Records,Builder Time,Builder Map input records,Builder Reduce input groups,Builder Reduce input records,Grouper Time,Combiner Time,Combiner Map input records,Combiner Reduce input groups,Combiner Reduce input records,Exporter Time,Exporter Map input records,Exporter Reduce input groups,Exporter Reduce input records
+1,22,4589,36,4589,7639,39900,4,28,12488,12488,12488,13,12488,0,0
+20,16,4589,24,4589,7639,39900,3,22,12488,12488,12488,12,12488,0,0
+50,19,4589,26,4589,7639,39900,3,24,12488,12488,12488,14,12488,0,0
+100,18,4589,24,4589,7639,39900,2,26,12488,12488,12488,15,12488,0,0
