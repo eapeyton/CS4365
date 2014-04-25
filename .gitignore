@@ -1,6 +1,9 @@
 /HadoopDedoop/nbproject/private/
 stats.csv
 
+*.swp
+*.aux
+*.log
 *.class
 
 # Mobile Tools for Java (J2ME)
