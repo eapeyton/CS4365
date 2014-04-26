@@ -26,14 +26,37 @@ public abstract class Importer<F extends From, T extends To> implements ERJob {
     private Class<F> fromClass;
     private Class<T> toClass;
 
+    /**
+     * Return the class that represents the source schema
+     * @return the class that represents the source schema
+     */
     protected abstract Class<F> getFromClass();
 
+    /**
+     * Map the input schema (From) to the global schema (To).
+     * Use the attributes in the "from" object to fill in attributes in the "to" object.
+     * @param from the import record
+     * @param to the global record
+     */
     protected abstract void map(F from, T to);
 
+    /**
+     * Produce an import record from a writable input.
+     * @param writable the writable from input to the map-reduce job
+     * @param from an object that represents the import schema
+     */
     protected abstract void writableToFrom(Writable writable, F from);
 
+    /**
+     * Return the input format of this importer.
+     * @return the input format
+     */
     protected abstract Class<? extends InputFormat> getInputFormat();
 
+    /**
+     * Return the input path for the data to import in HDFS
+     * @return the input path
+     */
     public abstract Path getInputPath();
 
     public Job createJob(Configuration conf) throws IOException {
