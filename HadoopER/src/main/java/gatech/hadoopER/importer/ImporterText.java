@@ -1,5 +1,6 @@
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.global.To;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.mapreduce.InputFormat;

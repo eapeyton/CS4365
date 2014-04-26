@@ -4,7 +4,7 @@
 package gatech.hadoopER.products;
 
 import gatech.hadoopER.StringSet;
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import gatech.hadoopER.util.ERUtil;
 import java.util.Objects;
 import java.util.Set;

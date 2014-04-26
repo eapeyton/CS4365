@@ -1,5 +1,6 @@
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.global.To;
 import java.io.IOException;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;

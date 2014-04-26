@@ -1,4 +1,4 @@
-package gatech.hadoopER.importer;
+package gatech.hadoopER.global;
 
 import gatech.hadoopER.io.SelfSerializingWritable;
 import java.util.Set;

@@ -3,6 +3,7 @@
  */
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.global.To;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.hadoop.io.Text;

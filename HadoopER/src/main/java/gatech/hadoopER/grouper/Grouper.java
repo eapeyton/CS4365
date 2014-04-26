@@ -3,7 +3,7 @@
  */
 package gatech.hadoopER.grouper;
 
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import gatech.hadoopER.util.ERUtil;
 import java.io.IOException;
 import java.lang.reflect.Array;

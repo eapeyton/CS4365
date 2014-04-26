@@ -3,7 +3,7 @@
  */
 package gatech.hadoopER.combiner;
 
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;

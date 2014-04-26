@@ -4,7 +4,7 @@
 package gatech.hadoopER.combiner;
 
 import gatech.hadoopER.ERJob;
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import java.io.IOException;
 import java.util.List;
 import org.apache.hadoop.conf.Configuration;

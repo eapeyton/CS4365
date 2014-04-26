@@ -3,7 +3,7 @@
  */
 package gatech.hadoopER.builder;
 
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import java.io.IOException;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;

@@ -3,6 +3,7 @@
  */
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.global.To;
 import gatech.hadoopER.io.XMLInputFormat;
 import java.io.IOException;
 import java.io.StringReader;

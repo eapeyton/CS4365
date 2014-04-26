@@ -4,7 +4,7 @@
 package gatech.hadoopER.exporter;
 
 import com.google.gson.Gson;
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import java.io.IOException;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.NullWritable;

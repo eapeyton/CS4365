@@ -8,7 +8,7 @@ import gatech.hadoopER.combiner.Combiner;
 import gatech.hadoopER.exporter.Exporter;
 import gatech.hadoopER.grouper.Grouper;
 import gatech.hadoopER.importer.Importer;
-import gatech.hadoopER.importer.To;
+import gatech.hadoopER.global.To;
 import gatech.hadoopER.util.ERUtil;
 import java.io.BufferedWriter;
 import java.io.FileOutputStream;

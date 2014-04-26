@@ -1,5 +1,6 @@
 package gatech.hadoopER.importer;
 
+import gatech.hadoopER.global.To;
 import java.io.IOException;
 import java.util.ArrayList;
 import org.apache.hadoop.io.Text;
