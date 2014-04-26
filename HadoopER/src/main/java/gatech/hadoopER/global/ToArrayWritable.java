@@ -1,7 +1,7 @@
 /*
  * CS 4365 Project
  */
-package gatech.hadoopER.importer;
+package gatech.hadoopER.global;
 
 import gatech.hadoopER.events.GlobalEvent;
 import org.apache.hadoop.io.ArrayWritable;
