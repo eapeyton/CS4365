@@ -20,6 +20,11 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
  */
 public abstract class Combiner<T extends To> implements ERJob {
 
+    /**
+     * Combine a group of entities into a single entity.
+     * @param entities group of entities
+     * @return the representative entities
+     */
     public abstract T combine(List<T> entities);
 
     @Override

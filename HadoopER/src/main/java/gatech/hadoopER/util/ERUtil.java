@@ -18,22 +18,25 @@ import org.apache.hadoop.fs.Path;
  * @author eric
  */
 public class ERUtil {
-
-    public static void main(String[] args) {
-        String s1 = "microsoft(r) money 2007 deluxe";
-        String s2 = "microsoft(r) expression web 1.0";
-        System.out.println(computeJaccardOfString(s1,s2));
-        System.out.println(computeLevenshteinDistance(s1,s2));
-        System.out.println(computeJaroWinklerDistance(s1, s2));
-        String[] set = {"hello", "my name", "is", "jonas"};
-        System.out.println(splitToWords(new HashSet<>(Arrays.asList(set))));
-    }
     
+    /**
+     * Get the percent difference between two doubles
+     * @param a
+     * @param b
+     * @return the percent difference
+     */
     public static double getPercentDifference(double a, double b) {
         double avg = (a + b) / 2.0;
         return Math.abs((a - b)) / avg;
     }
 
+    /**
+     * Recurse a directory and return the paths of items inside.
+     * @param fs
+     * @param dir
+     * @return the paths of items inside
+     * @throws IOException 
+     */
     public static List<Path> recurseDir(FileSystem fs, Path dir) throws IOException {
         List<Path> files = new ArrayList<>();
         for (FileStatus item : fs.listStatus(dir)) {
@@ -51,6 +54,11 @@ public class ERUtil {
         return files;
     }
     
+    /**
+     * Split a set of sentences into a single set of words
+     * @param strSet
+     * @return a set of words
+     */
     public static Set<String> splitToWords(Set<String> strSet) {
         HashSet<String> words = new HashSet<>();
         for (String str: strSet) {
@@ -59,14 +67,31 @@ public class ERUtil {
         return words;
     }
     
+    /**
+     * Split a sentence into a set of words
+     * @param str
+     * @return a set of words
+     */
     public static Set<String> splitString(String str) {
         return new HashSet<>(Arrays.asList(str.split("\\s+")));
     }
     
+    /**
+     * Compute the Jaccard similarity of two sets of sentences
+     * @param set1
+     * @param set2
+     * @return 
+     */
     public static double computeJaccardOfWords(Set<String> set1, Set<String> set2) {
         return computeJaccardSimilarity(splitToWords(set1),splitToWords(set2));
     }
     
+    /**
+     * Compute the Jaccard similarity of the words in two strings
+     * @param similar1
+     * @param similar2
+     * @return the jaccard similarity
+     */
     public static double computeJaccardOfString(String similar1, String similar2) {
         HashSet<String> h1 = new HashSet<>();
         HashSet<String> h2 = new HashSet<>();
@@ -75,6 +100,12 @@ public class ERUtil {
         return computeJaccardOfWords(h1, h2);
     }
 
+    /**
+     * Compute the Jaccard similarity of two sets
+     * @param similar1
+     * @param similar2
+     * @return the jaccard similarity
+     */
     public static double computeJaccardSimilarity(Set<String> similar1, Set<String> similar2) {
         int sizeh1 = similar1.size();
         //Retains all elements in h3 that are contained in h2 ie intersection
@@ -95,6 +126,12 @@ public class ERUtil {
         return Math.min(Math.min(a, b), c);
     }
 
+    /**
+     * Compute the Levenshtein distance of two strings.
+     * @param str1
+     * @param str2
+     * @return 
+     */
     public static int computeLevenshteinDistance(String str1, String str2) {
         int[][] distance = new int[str1.length() + 1][str2.length() + 1];
 
@@ -117,6 +154,12 @@ public class ERUtil {
         return distance[str1.length()][str2.length()];
     }
 
+    /**
+     * Compute the Jaro-Winkler distance of two strings.
+     * @param s1
+     * @param s2
+     * @return 
+     */
     public static float computeJaroWinklerDistance(String s1, String s2) {
         int[] mtp = matches(s1, s2);
         float m = mtp[0];

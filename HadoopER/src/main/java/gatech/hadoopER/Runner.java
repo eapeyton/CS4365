@@ -10,16 +10,11 @@ import gatech.hadoopER.grouper.Grouper;
 import gatech.hadoopER.importer.Importer;
 import gatech.hadoopER.global.To;
 import gatech.hadoopER.util.ERUtil;
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
 import org.apache.hadoop.fs.FileSystem;
@@ -38,16 +33,40 @@ import org.apache.hadoop.util.ToolRunner;
  */
 public abstract class Runner<T extends To, A extends ArrayWritable> extends Configured implements Tool {
 
+    /**
+     * Return the global schema class of the entity type.
+     * @return 
+     */
     public abstract Class<T> getToClass();
 
+    /**
+     * Return the ArrayWritable of the global schema class.
+     * @return 
+     */
     public abstract Class<A> getToArrayClass();
 
+    /**
+     * Return of list of importers to use.
+     * @return list of importers
+     */
     public abstract List<Importer> getImporters();
 
+    /**
+     * Return the builder to use for matching.
+     * @return the builder
+     */
     public abstract Builder<T> getBuilder();
 
+    /**
+     * Return the combiner to combine groups of entity types.
+     * @return the combiner
+     */
     public abstract Combiner<T> getCombiner();
 
+    /**
+     * Return the working directory on HDFS in which to store intermediate files.
+     * @return home directory
+     */
     public abstract Path getHome();
 
     private LinkedHashMap<String, String> stats = new LinkedHashMap<>();
@@ -68,29 +87,16 @@ public abstract class Runner<T extends To, A extends ArrayWritable> extends Conf
 
     @Override
     public int run(String[] args) throws Exception {
-        boolean first_run = true;
-        try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("stats.csv"), "utf-8"))) {
-            int[] reducer_values = {20,50,100,200};
-            for (int reducer_value : reducer_values) {
-                Configuration conf = super.getConf();
-                conf.setClass("ToClass", getToClass(), getToClass());
-                conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
-                conf.setInt("NumReduceTasks", reducer_value);
-                stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
-                fs = FileSystem.get(conf);
-                runImport(conf);
-                runBuilder(conf);
-                runCombiner(conf);
-                runExporter(conf);
-                if(first_run) {
-                    writer.write(StringUtils.join(stats.keySet(), ","));
-                    first_run = false;
-                }
-                writer.newLine();
-                writer.write(StringUtils.join(stats.values(), ","));
-            }
-        }
-
+        Configuration conf = super.getConf();
+        conf.setClass("ToClass", getToClass(), getToClass());
+        conf.setClass("ToArrayClass", getToArrayClass(), getToArrayClass());
+        conf.setInt("NumReduceTasks", 50);
+        stats.put("Num. Reducers", Integer.toString(conf.getInt("NumReduceTasks", -1)));
+        fs = FileSystem.get(conf);
+        runImport(conf);
+        runBuilder(conf);
+        runCombiner(conf);
+        runExporter(conf);
         return 0;
     }
 

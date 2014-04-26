@@ -19,6 +19,12 @@ import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat;
  */
 public abstract class Builder<T extends To> implements ERJob {
 
+    /**
+     * Return true if the two entities are matching, false otherwise
+     * @param a the first entity
+     * @param b the second entity
+     * @return true if the entities are matching, false otherwise
+     */
     protected abstract boolean areMatching(T a, T b);
 
     @Override

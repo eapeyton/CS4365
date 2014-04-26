@@ -12,6 +12,10 @@ public abstract class To extends SelfSerializingWritable {
 
     public UUID uuid;
 
+    /**
+     * Return the set of strings to utilize during blocking.
+     * @return the blocking keys
+     */
     public abstract Set<String> getBlockingKeys();
 
 }
