@@ -3,7 +3,7 @@
  */
 package gatech.hadoopER.products;
 
-import gatech.hadoopER.StringSet;
+import gatech.hadoopER.util.StringSet;
 import gatech.hadoopER.global.To;
 import gatech.hadoopER.util.ERUtil;
 import java.util.Objects;
@@ -11,7 +11,7 @@ import java.util.Set;
 import org.apache.hadoop.io.ArrayWritable;
 
 /**
- *
+ * This an example global schema for a real-world product.
  * @author eric
  */
 public class GlobalProduct extends To {

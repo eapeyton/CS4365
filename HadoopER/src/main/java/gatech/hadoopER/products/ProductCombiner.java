@@ -7,7 +7,7 @@ import gatech.hadoopER.combiner.Combiner;
 import java.util.List;
 
 /**
- *
+ * Example product combiner.
  * @author eric
  */
 public class ProductCombiner extends Combiner<GlobalProduct> {

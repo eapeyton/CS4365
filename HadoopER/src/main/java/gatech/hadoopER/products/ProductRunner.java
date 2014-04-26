@@ -34,7 +34,7 @@ public class ProductRunner extends Runner<GlobalProduct, GPArrayWritable> {
 
     @Override
     public List<Importer> getImporters() {
-        Importer[] importers = {new ImportAmazon()};
+        Importer[] importers = {new ImportAmazonGoogle()};
         return Arrays.asList(importers);
     }
 

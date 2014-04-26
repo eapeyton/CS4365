@@ -5,18 +5,18 @@ package gatech.hadoopER.products;
 
 import gatech.hadoopER.importer.From;
 import gatech.hadoopER.importer.ImporterCSV;
-import gatech.hadoopER.products.ImportAmazon.AmazonProduct;
+import gatech.hadoopER.products.ImportAmazonGoogle.AmazonGoogleProduct;
 import java.util.List;
 import org.apache.hadoop.fs.Path;
 
 /**
- *
+ * Example importer of both Google and Amazon datasets (both have same schema).
  * @author eric
  */
-public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
+public class ImportAmazonGoogle extends ImporterCSV<AmazonGoogleProduct, GlobalProduct> {
 
     @Override
-    protected void csvToFrom(List<String> cols, AmazonProduct from) {
+    protected void csvToFrom(List<String> cols, AmazonGoogleProduct from) {
         from.id = cols.get(0);
         from.title = cols.get(1).replaceAll("\"", "");
         from.description = cols.get(2).replaceAll("\"", "");
@@ -25,12 +25,12 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
     }
 
     @Override
-    protected Class<AmazonProduct> getFromClass() {
-        return AmazonProduct.class;
+    protected Class<AmazonGoogleProduct> getFromClass() {
+        return AmazonGoogleProduct.class;
     }
 
     @Override
-    protected void map(AmazonProduct from, GlobalProduct to) {
+    protected void map(AmazonGoogleProduct from, GlobalProduct to) {
         to.id.add(from.id);
         to.name.add(from.title);
         to.description.add(from.description);
@@ -43,7 +43,7 @@ public class ImportAmazon extends ImporterCSV<AmazonProduct, GlobalProduct> {
         return new Path("/user/epeyton.site/products/input-med/20products.csv");
     }
 
-    public static class AmazonProduct extends From {
+    public static class AmazonGoogleProduct extends From {
 
         String id;
         String title;

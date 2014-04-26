@@ -7,7 +7,7 @@ import gatech.hadoopER.builder.Builder;
 import gatech.hadoopER.util.ERUtil;
 
 /**
- *
+ * Example product matcher.
  * @author eric
  */
 public class ProductBuilder extends Builder<GlobalProduct> {

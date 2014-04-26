@@ -1,7 +1,7 @@
 /*
  * CS 4365 Project
  */
-package gatech.hadoopER;
+package gatech.hadoopER.util;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import org.jdom2.JDOMException;
 import org.jdom2.input.SAXBuilder;
 
 /**
- *
+ * This class was used for testing but is not a functioning component.
  * @author eric
  */
 public class MinHash {

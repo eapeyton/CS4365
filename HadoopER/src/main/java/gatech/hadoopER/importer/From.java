@@ -7,7 +7,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * From is the base class for importing records in an importer.
  * @author eric
  */
 public abstract class From extends SelfSerializingWritable {
